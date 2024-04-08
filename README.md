@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./.github/img/logo.png" alt="Apus"></a>
+  <img src="./.github/img/logo.png" alt="Apus" width="600" height="600">
 </h1>
 
 ## Introduction
