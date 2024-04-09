@@ -1,4 +1,4 @@
 name = "apus"
-main = "src/main.py"
+main = "src/api/main.py"
 compatibility_flags = ["python_workers"]
 compatibility_date = "2024-04-05"
