@@ -25,5 +25,5 @@
 ## About
 
 ### Authors
-[Pedro Cunha](https://github.com/cunhaac)
-[Nuno Gomes](https://github.com/ndgomes)
+- [Pedro Cunha](https://github.com/cunhaac)</br>
+- [Nuno Gomes](https://github.com/ndgomes)
