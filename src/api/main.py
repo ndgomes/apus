@@ -58,14 +58,14 @@ async def login(user_login: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == user_login.email).first()
 
     if user is None or not bcrypt.checkpw(user_login.password.encode('utf-8'), user.password.encode('utf-8')):
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
     access_token_expires = timedelta(minutes=30)
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.username}, expires_delta=access_token_expires
     )
 
-    return {"access_token": access_token, "token_type": "bearer", "user": user.username, "email": user.email}
+    return {"access_token": access_token, "token_type": "bearer", "user": user.username}
 
 
 # Pydantic model for signup request body
@@ -89,7 +89,7 @@ async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
     # Hash the password before storing it
     hashed_password = bcrypt.hashpw(user_signup.password.encode('utf-8'), bcrypt.gensalt())
 
-    new_user = User(username=user_signup.username, password=hashed_password.decode('utf-8'))
+    new_user = User(username=user_signup.username, email=user_signup.email, password=hashed_password.decode('utf-8'))
     db.add(new_user)
     db.commit()
 
