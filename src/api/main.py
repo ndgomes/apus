@@ -8,7 +8,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
 from typing import Optional
-from jwt.exceptions import PyJWTError
 
 from models import Base, User, UserProfile
 from settings import DATABASE_URL, SECRET_KEY, ALGORITHM
@@ -113,7 +112,7 @@ async def get_current_user(token: str = Header(...), db: Session = Depends(get_d
             return None
         user = db.query(User).filter(User.username == username).first()
         return user
-    except PyJWTError:
+    except Exception:
         return None
 
 
