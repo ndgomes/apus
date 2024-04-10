@@ -1,3 +1,0 @@
-name = "apus-backend"
-main = "src/api/main.js"
-compatibility_date = "2024-04-05"
