@@ -4,4 +4,3 @@ sqlalchemy
 jwt
 bcrypt
 psycopg2
-PyJWT
