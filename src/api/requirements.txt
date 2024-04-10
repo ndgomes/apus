@@ -1,7 +1,6 @@
 fastapi
 uvicorn
 sqlalchemy
-jwt
 bcrypt
 psycopg2
 PyJWT==2.8.0
