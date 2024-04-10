@@ -6,11 +6,13 @@ from datetime import datetime
 
 Base = declarative_base()
 
+
 # Define SQLAlchemy models
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, unique=True)
+    email = Column(String, unique=True)
     password = Column(String)
     createdAt = Column(DateTime, default=datetime.now)
     updatedAt = Column(DateTime, onupdate=datetime.now)
@@ -19,6 +21,7 @@ class User(Base):
     profile = relationship("UserProfile", back_populates="user")
     activityLogs = relationship("UserActivityLog", back_populates="user")
     weeklyStatistics = relationship("UserWeekStatistics", back_populates="user")
+
 
 class UserProfile(Base):
     __tablename__ = 'user_profiles'
@@ -32,6 +35,7 @@ class UserProfile(Base):
 
     user = relationship("User", back_populates="profile")
 
+
 class UserActivityLog(Base):
     __tablename__ = 'user_activity_logs'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -40,6 +44,7 @@ class UserActivityLog(Base):
     createdAt = Column(DateTime, default=datetime.now)
 
     user = relationship("User", back_populates="activityLogs")
+
 
 class UserWeekStatistics(Base):
     __tablename__ = 'user_week_statistics'

@@ -1,21 +1,17 @@
-import os
+#main.py
 import jwt
 import bcrypt 
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Header
 from pydantic import BaseModel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import Optional
+from jwt.exceptions import InvalidTokenError
 
-from models import Base, User, UserProfile, UserActivityLog, UserWeekStatistics
-
-# Environment Variables
-DATABASE_URL = os.environ.get("DATABASE_URL")
-## Secret key for encoding/decoding JWT tokens
-SECRET_KEY = os.environ.get("SECRET_KEY")
-ALGORITHM = os.environ.get("ALGORITHM")
+from models import Base, User, UserProfile
+from settings import DATABASE_URL, SECRET_KEY, ALGORITHM
 
 # Database
 engine = create_engine(DATABASE_URL)
@@ -26,6 +22,7 @@ Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI
 app = FastAPI()
+
 
 # Dependency to get the database session
 def get_db():
@@ -41,11 +38,6 @@ async def root():
     return {"message": "Hello World"}
 
 
-# Pydantic model for login request body
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
 # Function to create a JWT token
 def create_access_token(data: dict, expires_delta: timedelta):
     to_encode = data.copy()
@@ -53,6 +45,13 @@ def create_access_token(data: dict, expires_delta: timedelta):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+
+# Pydantic model for login request body
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
 
 # Login route
 @app.post("/login")
@@ -68,6 +67,7 @@ async def login(user_login: UserLogin, db: Session = Depends(get_db)):
     )
 
     return {"access_token": access_token, "token_type": "bearer", "user": user.username}
+
 
 # Pydantic model for signup request body
 class UserSignup(BaseModel):
@@ -95,3 +95,94 @@ async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "User created successfully"}
+
+
+# Pydantic model for user profile registration request body
+class UserProfileRegistration(BaseModel):
+    cigarettes_per_day: int
+    price_per_package: float
+    cigarettes_per_package: int
+
+
+# Dependency to get the currently logged-in user
+async def get_current_user(token: str = Header(...), db: Session = Depends(get_db)) -> Optional[User]:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            return None
+        user = db.query(User).filter(User.username == username).first()
+        return user
+    except InvalidTokenError:
+        return None
+
+
+# Endpoint for registering user profile
+@app.post("/user/profile")
+async def register_user_profile(
+    profile_data: UserProfileRegistration,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    # Create and save user profile
+    user_profile = UserProfile(
+        user_id=current_user.id,
+        cigarettesPerDay=profile_data.cigarettes_per_day,
+        pricePerPackage=profile_data.price_per_package, 
+        cigarettesPerPackage=profile_data.cigarettes_per_package
+    )
+    db.add(user_profile)
+    db.commit()
+
+    return {"message": "User profile created successfully"}
+
+
+# Endpoint for retrieving user profile
+@app.get("/user/profile")
+async def get_user_profile(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    # Query user profile information
+    user_profile = db.query(UserProfile).filter(UserProfile.user_id == current_user.id).first()
+    if not user_profile:
+        raise HTTPException(status_code=404, detail="User profile not found")
+
+    # Return user profile information
+    return {
+        "cigarettes_per_day": user_profile.cigarettesPerDay,
+        "price_per_package": user_profile.pricePerPackage,
+        "cigarettes_per_package": user_profile.cigarettesPerPackage
+    }
+
+
+# Endpoint for updating user profile
+@app.put("/user/profile")
+async def update_user_profile(
+    profile_data: UserProfileRegistration,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    # Query user profile information
+    user_profile = db.query(UserProfile).filter(UserProfile.user_id == current_user.id).first()
+    if not user_profile:
+        raise HTTPException(status_code=404, detail="User profile not found")
+
+    # Update user profile with new data
+    user_profile.cigarettesPerDay = profile_data.cigarettes_per_day
+    user_profile.pricePerPackage = profile_data.price_per_package
+    user_profile.cigarettesPerPackage = profile_data.cigarettes_per_package
+
+    # Save the updated profile
+    db.commit()
+
+    return {"message": "User profile updated successfully"}
