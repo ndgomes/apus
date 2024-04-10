@@ -1,4 +1,4 @@
-import { Header } from "../components";
+import { Header, Login } from "../components";
 
 export function LoginPage() {
   return (
@@ -9,6 +9,7 @@ export function LoginPage() {
         linkName="Signup"
         linkUrl="/signup"
       />
+      <Login />
     </>
   );
 }
