@@ -50,7 +50,6 @@ class UserSignup(BaseModel):
     username: str
     email: str
     password: str
-    confirm_password: str
 
 
 # Route for user signup
@@ -59,9 +58,6 @@ async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.username == user_signup.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
-
-    if user_signup.password != user_signup.confirm_password:
-        raise HTTPException(status_code=400, detail="Passwords do not match")
 
     # Hash the password before storing it
     hashed_password = bcrypt.hashpw(user_signup.password.encode('utf-8'), bcrypt.gensalt())
