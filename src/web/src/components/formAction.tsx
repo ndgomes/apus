@@ -1,5 +1,5 @@
 interface FormActionProps {
-  onSubmit: (e: any) => void;
+  onSubmit?: (e: any) => void;
   type?: string;
   action?: "submit" | "reset" | "button" | undefined;
   text: string;

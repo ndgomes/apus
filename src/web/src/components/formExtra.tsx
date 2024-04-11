@@ -1,29 +1,40 @@
-export function FormExtra() {
-  return (
-    <div className="flex items-center justify-between ">
-      <div className="flex items-center">
-        <input
-          id="remember-me"
-          name="remember-me"
-          type="checkbox"
-          className="h-4 w-4 accent-purple-600"
-        />
-        <label
-          htmlFor="remember-me"
-          className="ml-2 block text-sm text-gray-900 dark:text-white"
-        >
-          Remember me
-        </label>
-      </div>
+interface FormExtraProps {
+  error: boolean;
+}
 
-      <div className="text-sm">
-        <a
-          href="#"
-          className="font-medium text-purple-600 hover:text-purple-500"
-        >
-          Forgot your password?
-        </a>
+export function FormExtra(props: FormExtraProps) {
+  return (
+    <>
+      {props.error && (
+        <div>
+          <span className="text-red-500">Email or Password invalid</span>
+        </div>
+      )}
+      <div className="flex items-center justify-between ">
+        <div className="flex items-center">
+          <input
+            id="remember-me"
+            name="remember-me"
+            type="checkbox"
+            className="h-4 w-4 accent-purple-600"
+          />
+          <label
+            htmlFor="remember-me"
+            className="ml-2 block text-sm text-gray-900 dark:text-white"
+          >
+            Remember me
+          </label>
+        </div>
+
+        <div className="text-sm">
+          <a
+            href="#"
+            className="font-medium text-purple-600 hover:text-purple-500"
+          >
+            Forgot your password?
+          </a>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
