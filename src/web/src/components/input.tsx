@@ -1,6 +1,7 @@
 interface InputProps {
   handleChange: (e: any) => void;
-  value: string | number;
+  handleOnFocus?: () => void;
+  value?: string | number;
   labelText: string;
   labelFor: string;
   id: string;
@@ -16,6 +17,7 @@ const fixedInputClass =
 
 export function Input({
   handleChange,
+  handleOnFocus,
   value,
   labelText,
   labelFor,
@@ -40,6 +42,7 @@ export function Input({
         required={isRequired}
         className={fixedInputClass + customClass}
         placeholder={placeholder}
+        onFocus={handleOnFocus}
       />
     </div>
   );
