@@ -66,3 +66,7 @@ jspm_packages/
 
 .dev.vars
 .wrangler/
+
+# sqlite
+
+.db
