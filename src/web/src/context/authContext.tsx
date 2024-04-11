@@ -5,13 +5,17 @@ import axios from "axios";
 interface CurrentUserContextType {
   authToken: string | undefined;
   setAuthToken: React.Dispatch<React.SetStateAction<string | undefined>>;
+
   user: string | undefined;
   setUser: React.Dispatch<React.SetStateAction<string | undefined>>;
+
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  callLogout: () => void;
+
   signupWarning: boolean;
   setSignupWarning: React.Dispatch<React.SetStateAction<boolean>>;
+
+  callLogout: () => void;
 }
 
 interface Props {
