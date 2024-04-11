@@ -6,7 +6,7 @@ from typing import Optional
 import jwt
 
 from settings import DATABASE_URL, SECRET_KEY, ALGORITHM
-from models import User
+from schemas.models import User, Base
 
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -18,6 +18,10 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def create_tables():
+    Base.metadata.create_all(bind=engine)
 
 
 # Dependency to get the currently logged-in user

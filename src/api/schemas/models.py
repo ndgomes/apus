@@ -58,3 +58,10 @@ class UserWeekStatistics(Base):
     updatedAt = Column(DateTime, onupdate=datetime.now)
 
     user = relationship("User", back_populates="weeklyStatistics")
+
+
+# revoked_token model
+class RevokedToken(Base):
+    __tablename__ = "revoked_tokens"
+    id = Column(Integer, primary_key=True, index=True)
+    jti = Column(String, unique=True, index=True)
