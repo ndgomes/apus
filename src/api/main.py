@@ -25,7 +25,7 @@ app.include_router(api_router)
 # Database setup
 app.add_event_handler("startup", get_db)
 
-# Create the database tables
+# Create the database tables if they don't exist
 app.add_event_handler("startup", create_tables)
 
 
