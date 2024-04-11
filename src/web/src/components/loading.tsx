@@ -2,14 +2,10 @@ import ReactLoading from "react-loading";
 
 export const Loading = () => {
   return (
-    <div className="Loading_screen-container">
-      <img
-        src="https://github.com/cunhaac/apus/blob/master/.github/img/logo.png?raw=true"
-        alt=""
-      />
+    <div className="flex justify-center">
       <ReactLoading
-        type="spin"
-        color={"black"}
+        type="cylon"
+        color={"#9333EA"}
         height={50}
         width={50}
         delay={50}

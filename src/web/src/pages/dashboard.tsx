@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
 import { BadgeCheck } from "lucide-react";
+import apusLogo from "../assets/apusLogo.png";
 
 interface userinfoInterface {
   id: number;
@@ -10,7 +11,7 @@ interface userinfoInterface {
 }
 
 export const DashboardPage: React.FC = () => {
-  const { authToken, setLoading, callLogout } = useContext(AuthContext);
+  const { authToken, callLogout } = useContext(AuthContext);
 
   const [userInfos, setUserInfos] = useState<userinfoInterface>();
 
@@ -24,7 +25,6 @@ export const DashboardPage: React.FC = () => {
       })
       .then((response) => {
         setUserInfos(response.data);
-        setLoading(true);
       })
       .catch((error) => {
         console.log(error);
@@ -32,26 +32,23 @@ export const DashboardPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="HomePage__container text-white">
-      <div className="HomePage__logo-container">
-        <img
-          src="https://github.com/cunhaac/apus/blob/master/.github/img/logo.png?raw=true"
-          alt="logo"
-        />
+    <div className="bg-gray-200 dark:bg-gray-900 min-h-full h-screen">
+      <div>
+        <img src={apusLogo} alt="logo" />
       </div>
       <h1>Hello</h1>
-      <div className="HomePage__message-container">
+      <div>
         <p>You are Verified</p>
         <BadgeCheck />
       </div>
-      <div className="HomePage__logout">
+      <div>
         <button onClick={() => callLogout()}>Log out</button>
       </div>
-      <div className="HomePage__userinfo-container_1">
+      <div>
         <p>Username:&#160; </p>
         <span>{userInfos?.username}</span>
       </div>
-      <div className="HomePage__userinfo-container_2">
+      <div>
         <p>Email:&#160;</p>
         <span>{userInfos?.email}</span>
       </div>

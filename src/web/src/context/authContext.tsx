@@ -9,9 +9,6 @@ interface CurrentUserContextType {
   user: string | undefined;
   setUser: React.Dispatch<React.SetStateAction<string | undefined>>;
 
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-
   signupWarning: boolean;
   setSignupWarning: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -39,7 +36,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       : undefined
   );
 
-  let [loading, setLoading] = useState<boolean>(false);
   let [signupWarning, setSignupWarning] = useState<boolean>(false);
 
   //Call logout
@@ -78,7 +74,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           setAuthToken(newToken);
           setUser(jwtDecode(newToken));
           localStorage.setItem("authToken", JSON.stringify(newToken));
-          setLoading(true);
         })
         .catch(function (error) {
           console.log(error);
@@ -87,16 +82,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }
 
-  // updating refresh token after revisit and access token expire time
+  // Updating refresh token after revisit and access token expire time
   useEffect(() => {
-    if (!loading) {
-      updateAccess();
-    }
-
-    if (!authToken) {
-      setLoading(true);
-    }
-
     let twentyMinutes = 1000 * 60 * 20;
 
     let interval = setInterval(() => {
@@ -105,7 +92,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       }
     }, twentyMinutes);
     return () => clearInterval(interval);
-  }, [authToken, loading]);
+  }, [authToken]);
 
   return (
     <AuthContext.Provider
@@ -114,14 +101,12 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         setAuthToken,
         setUser,
         authToken,
-        setLoading,
-        loading,
         callLogout,
         signupWarning,
         setSignupWarning,
       }}
     >
-      {loading ? children : null}
+      {children}
     </AuthContext.Provider>
   );
 };
