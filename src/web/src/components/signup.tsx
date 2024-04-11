@@ -1,33 +1,21 @@
-import { useState } from "react";
 import { signupFields } from "../constants/formFields";
 
 import { Input } from "./input";
 import { FormAction } from "./formAction";
 
-export function Signup() {
-  let fieldsState = {};
-  signupFields.forEach((field) => (fieldsState[field.id] = ""));
-  const [signupState, setSignupState] = useState(fieldsState);
+interface SignupProps {
+  onSubmit: (event: React.FormEvent) => void;
+  onChange: (event: React.FormEvent) => void;
+}
 
-  const handleChange = (e: any) =>
-    setSignupState({ ...signupState, [e.target.id]: e.target.value });
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log(signupState);
-    createAccount();
-  };
-
-  const createAccount = () => {};
-
+export function Signup(props: SignupProps) {
   return (
-    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+    <form className="mt-8 space-y-6" onSubmit={props.onSubmit}>
       <div className="">
         {signupFields.map((field) => (
           <Input
             key={field.id}
-            handleChange={handleChange}
-            value={signupState[field.id]}
+            handleChange={props.onChange}
             labelText={field.labelText}
             labelFor={field.labelFor}
             id={field.id}
@@ -37,7 +25,8 @@ export function Signup() {
             placeholder={field.placeholder}
           />
         ))}
-        <FormAction onSubmit={handleSubmit} text="Signup" />
+
+        <FormAction text="Signup" />
       </div>
     </form>
   );
