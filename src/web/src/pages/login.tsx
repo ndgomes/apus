@@ -4,7 +4,6 @@ import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { Loading } from "../components/loading";
 
 export function LoginPage() {
   let navigate = useNavigate();

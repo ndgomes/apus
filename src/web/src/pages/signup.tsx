@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Header, Signup } from "../components";
-import { signupFields } from "../constants/formFields";
 
 export function SignupPage() {
-  let fieldsState = {};
-  signupFields.forEach((field) => (fieldsState[field.id] = ""));
-  const [signupState, setSignupState] = useState(fieldsState);
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const [errorState, setErrorState] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleOnChange = (e: any) =>
     setSignupState({ ...signupState, [e.target.id]: e.target.value });
