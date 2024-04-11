@@ -14,24 +14,24 @@ class User(Base):
     username = Column(String, unique=True)
     email = Column(String, unique=True)
     password = Column(String)
-    createdAt = Column(DateTime, default=datetime.now)
-    updatedAt = Column(DateTime, onupdate=datetime.now)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.now)
 
     # Define relationships
-    profile = relationship("UserProfile", back_populates="user")
-    activityLogs = relationship("UserActivityLog", back_populates="user")
-    weeklyStatistics = relationship("UserWeekStatistics", back_populates="user")
+    profile = relationship("Quiz", back_populates="user")
+    activity_logs = relationship("UserActivityLog", back_populates="user")
+    weekly_statistics = relationship("UserWeekStatistics", back_populates="user")
 
 
-class UserProfile(Base):
-    __tablename__ = 'user_profiles'
+class Quiz(Base):
+    __tablename__ = 'quiz'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'), unique=True)
-    cigarettesPerDay = Column(Integer)
-    pricePerPackage = Column(Float)
-    cigarettesPerPackage = Column(Integer)
-    createdAt = Column(DateTime, default=datetime.now)
-    updatedAt = Column(DateTime, onupdate=datetime.now)
+    cigarretes_per_day = Column(Integer)
+    price_per_package = Column(Float)
+    cigarretes_per_package = Column(Integer)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.now)
 
     user = relationship("User", back_populates="profile")
 
@@ -40,24 +40,24 @@ class UserActivityLog(Base):
     __tablename__ = 'user_activity_logs'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    smokingTime = Column(DateTime)
-    createdAt = Column(DateTime, default=datetime.now)
+    smoking_time = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.now)
 
-    user = relationship("User", back_populates="activityLogs")
+    user = relationship("User", back_populates="activity_logs")
 
 
 class UserWeekStatistics(Base):
     __tablename__ = 'user_week_statistics'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    weekNumber = Column(Integer)
-    startDate = Column(DateTime)
-    endDate = Column(DateTime)
+    week_number = Column(Integer)
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
     user_id = Column(Integer, ForeignKey('users.id'))
-    smokingIntervalTime = Column(Integer)
-    createdAt = Column(DateTime, default=datetime.now)
-    updatedAt = Column(DateTime, onupdate=datetime.now)
+    smoking_interval_time = Column(Integer)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.now)
 
-    user = relationship("User", back_populates="weeklyStatistics")
+    user = relationship("User", back_populates="weekly_statistics")
 
 
 # revoked_token model
