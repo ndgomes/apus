@@ -23,6 +23,26 @@ def create_access_token(data: dict, expires_delta: timedelta):
     return encoded_jwt
 
 
+# Function to create a refresh token
+def create_refresh_token(data: dict, expires_delta: timedelta):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire, "jti": str(uuid.uuid4())})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+# Function to decode JWT token
+def decode_access_token(token: str):
+    try:
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return decoded_token
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired")
+    except jwt.DecodeError:
+        raise HTTPException(status_code=401, detail="Could not decode token")
+
+
 # Pydantic model for login request body
 class UserLogin(BaseModel):
     email: str
@@ -69,17 +89,6 @@ async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
     return {"message": "User created successfully"}
 
 
-# Function to decode JWT token
-def decode_access_token(token: str):
-    try:
-        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return decoded_token
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token has expired")
-    except jwt.DecodeError:
-        raise HTTPException(status_code=401, detail="Could not decode token")
-
-
 # Logout route
 @router.post("/logout")
 async def logout(token: str = Header(...), db: Session = Depends(get_db)):
@@ -100,3 +109,36 @@ async def logout(token: str = Header(...), db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Logged out successfully"}
+
+
+# Refresh token route
+@router.post("/token-refresh")
+async def refresh_token(refresh_token: str = Header(...), db: Session = Depends(get_db)):
+    if not refresh_token:
+        raise HTTPException(status_code=401, detail="No refresh token provided")
+
+    # Decode the refresh token
+    try:
+        decoded_token = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Refresh token has expired")
+    except jwt.DecodeError:
+        raise HTTPException(status_code=401, detail="Could not decode refresh token")
+
+    # Check if the refresh token has been revoked
+    if db.query(RevokedToken).filter(RevokedToken.jti == decoded_token["jti"]).first():
+        raise HTTPException(status_code=401, detail="Refresh token has been revoked")
+
+    # Get user information from the refresh token
+    username = decoded_token.get("sub")
+
+    # Check if the user exists
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    # Create a new access token
+    access_token_expires = timedelta(minutes=30)
+    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+
+    return {"access_token": access_token}
