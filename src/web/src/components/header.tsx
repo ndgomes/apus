@@ -5,9 +5,11 @@ import apusLogo from "../assets/apusLogo.png";
 interface HeaderProps {
   heading: string;
   paragraph: string;
-  linkName: string;
-  linkUrl: string;
+  linkName?: string;
+  linkUrl?: string;
+  username?: string;
   isLoading?: boolean;
+  isFirstTime?: boolean;
 }
 
 export function Header({
@@ -16,6 +18,8 @@ export function Header({
   linkName,
   linkUrl = "#",
   isLoading,
+  isFirstTime = false,
+  username,
 }: HeaderProps) {
   return (
     <div className="mb-10">
@@ -29,7 +33,15 @@ export function Header({
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
             {heading}
           </h2>
-          <p className="text-center text-sm text-gray-600 mt-5 dark:text-white">
+          {isFirstTime && (
+            <h4 className="text-purple-500 mt-3 flex justify-center">
+              Welcome
+              <span className="text-black dark:text-white">
+                , <strong>{username}</strong>
+              </span>
+            </h4>
+          )}
+          <p className="text-center text-sm text-gray-600 mt-3 dark:text-white">
             {paragraph}{" "}
             <Link
               to={linkUrl}

@@ -54,4 +54,35 @@ const signupFields = [
   },
 ];
 
-export { loginFields, signupFields };
+const userQuiz = [
+  {
+    labelText: "How many cigarettes do you smoke a day?",
+    labelFor: "quest1",
+    id: "quest1",
+    name: "quest1",
+    type: "number",
+    isRequired: true,
+    placeholder: "How many cigarettes do you smoke a day?",
+  },
+  {
+    labelText: "How much does your pack of cigarettes cost?",
+    labelFor: "quest2",
+    id: "quest2",
+    name: "quest2",
+    type: "number",
+    step: "0.01",
+    isRequired: true,
+    placeholder: "How much does your pack of cigarettes cost?",
+  },
+  {
+    labelText: "How many cigarettes are in your pack?",
+    labelFor: "quest3",
+    id: "quest3",
+    name: "quest3",
+    type: "number",
+    isRequired: true,
+    placeholder: "How many cigarettes are in your pack?",
+  },
+];
+
+export { loginFields, signupFields, userQuiz };

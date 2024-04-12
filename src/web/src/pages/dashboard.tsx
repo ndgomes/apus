@@ -1,57 +1,52 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
-import { BadgeCheck } from "lucide-react";
-import apusLogo from "../assets/apusLogo.png";
+import { useDidMount } from "../hooks";
+import { QuizPage } from "./quiz";
 
-interface userinfoInterface {
-  id: number;
-  username: string;
-  email: string;
+export interface userConfigInterface {
+  quiz: {
+    cigarettes_per_day: number | null;
+    price_per_package: number | null;
+    cigarettes_per_package: number | null;
+  };
+  user: {
+    username: string;
+    email: string;
+    password: string;
+  };
 }
 
 export const DashboardPage: React.FC = () => {
   const { authToken, callLogout } = useContext(AuthContext);
 
-  const [userInfos, setUserInfos] = useState<userinfoInterface>();
+  const [userConfig, setUserConfig] = useState<userConfigInterface | undefined>(
+    undefined
+  );
+  const [isFirstTime, setIsFirstTime] = useState<boolean>(false);
 
-  useEffect(() => {
+  useDidMount(() => {
     axios
-      .get<userinfoInterface>("https://verifyme.up.railway.app/user/", {
+      .get("https://api.apu-s.space/configuration", {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + String(authToken),
+          token: authToken,
         },
       })
       .then((response) => {
-        setUserInfos(response.data);
+        setUserConfig(response.data.config);
+        if (Object.values(response.data.config.quiz).every((x) => x === null))
+          return setIsFirstTime(true);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  });
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-900 min-h-full h-screen">
-      <div>
-        <img src={apusLogo} alt="logo" />
-      </div>
-      <h1>Hello</h1>
-      <div>
-        <p>You are Verified</p>
-        <BadgeCheck />
-      </div>
-      <div>
-        <button onClick={() => callLogout()}>Log out</button>
-      </div>
-      <div>
-        <p>Username:&#160; </p>
-        <span>{userInfos?.username}</span>
-      </div>
-      <div>
-        <p>Email:&#160;</p>
-        <span>{userInfos?.email}</span>
-      </div>
-    </div>
+    <>
+      {isFirstTime && <QuizPage isFirstTime userConfig={userConfig} />}
+      <strong className="text-red">JÁ RESPONDESTE AO NOSSO QUESTIONARIO</strong>
+      {/* <button onClick={() => callLogout()}>Log out</button> */}
+    </>
   );
 };
