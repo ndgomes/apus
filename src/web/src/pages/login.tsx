@@ -26,9 +26,9 @@ export function LoginPage() {
     setErrorState(false);
   };
 
-  const handleOnSubmit = (e: React.FormEvent) => {
+  const handleOnSubmit = (event: React.FormEvent) => {
     if (email && password) {
-      e.preventDefault();
+      event.preventDefault();
       setLoadingState(true);
 
       axios

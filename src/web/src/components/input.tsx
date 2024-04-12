@@ -9,6 +9,7 @@ interface InputProps {
   type: string;
   isRequired: boolean;
   placeholder: string;
+  pattern?: string | undefined;
   customClass?: string;
 }
 
@@ -27,6 +28,7 @@ export function Input({
   isRequired = false,
   placeholder,
   customClass,
+  pattern = undefined,
 }: InputProps) {
   return (
     <div className="my-5">
@@ -43,6 +45,7 @@ export function Input({
         className={fixedInputClass + customClass}
         placeholder={placeholder}
         onFocus={handleOnFocus}
+        pattern={pattern}
       />
     </div>
   );
