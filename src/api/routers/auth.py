@@ -1,11 +1,13 @@
 # auth.py
-from fastapi import APIRouter, HTTPException, Depends, Header, status
-from sqlalchemy.orm import Session
 import jwt
 import bcrypt
 import uuid
+
 from datetime import datetime, timedelta
 from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException, Depends, Header, status
+from sqlalchemy.orm import Session
+
 
 from settings import SECRET_KEY, ALGORITHM
 from dependencies import get_db
