@@ -18,35 +18,20 @@ export interface userConfigInterface {
 }
 
 export const DashboardPage: React.FC = () => {
-  const { authToken, callLogout } = useContext(AuthContext);
-
-  const [userConfig, setUserConfig] = useState<userConfigInterface | undefined>(
-    undefined
-  );
-  const [isFirstTime, setIsFirstTime] = useState<boolean>(false);
+  const { getConfiguration, firstTime, userConfig, callLogout } =
+    useContext(AuthContext);
 
   useDidMount(() => {
-    axios
-      .get("https://api.apu-s.space/configuration", {
-        headers: {
-          token: authToken,
-        },
-      })
-      .then((response) => {
-        setUserConfig(response.data.config);
-        if (Object.values(response.data.config.quiz).every((x) => x === null))
-          return setIsFirstTime(true);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    getConfiguration();
   });
 
   return (
     <>
-      {isFirstTime && <QuizPage isFirstTime userConfig={userConfig} />}
+      {firstTime && (
+        <QuizPage isFirstTime={firstTime} userConfig={userConfig} />
+      )}
       <strong className="text-red">JÁ RESPONDESTE AO NOSSO QUESTIONARIO</strong>
-      {/* <button onClick={() => callLogout()}>Log out</button> */}
+      <button onClick={() => callLogout()}>Log out</button>
     </>
   );
 };

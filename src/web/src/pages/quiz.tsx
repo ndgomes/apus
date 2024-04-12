@@ -13,7 +13,7 @@ interface QuizPageProps {
 export function QuizPage(props: QuizPageProps) {
   let navigate = useNavigate();
 
-  const { authToken } = useContext(AuthContext);
+  const { authToken, getConfiguration } = useContext(AuthContext);
 
   const [quest1, setQuest1] = useState<number>();
   const [quest2, setQuest2] = useState<number>();
@@ -49,6 +49,7 @@ export function QuizPage(props: QuizPageProps) {
         .then((response) => {
           console.log(response);
           setErrorState(false);
+          getConfiguration();
           navigate("/dashboard");
         })
         .catch((error) => {
