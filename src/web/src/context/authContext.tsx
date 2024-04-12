@@ -1,6 +1,7 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { userConfigInterface } from "../pages";
 
 interface CurrentUserContextType {
   authToken: string | undefined;
@@ -12,7 +13,12 @@ interface CurrentUserContextType {
   signupWarning: boolean;
   setSignupWarning: React.Dispatch<React.SetStateAction<boolean>>;
 
+  userConfig: userConfigInterface | undefined;
+
+  firstTime: boolean;
+
   callLogout: () => void;
+  getConfiguration: () => void;
 }
 
 interface Props {
@@ -35,6 +41,12 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       ? jwtDecode(localStorage.getItem("authToken") || "")
       : undefined
   );
+
+  const [userConfig, setUserConfig] = useState<
+    userConfigInterface | undefined
+  >();
+
+  let [firstTime, setFirstTime] = useState<boolean>(false);
 
   let [signupWarning, setSignupWarning] = useState<boolean>(false);
 
@@ -93,6 +105,23 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     return () => clearInterval(interval);
   }, [authToken]);
 
+  function getConfiguration() {
+    axios
+      .get("https://api.apu-s.space/configuration", {
+        headers: {
+          token: authToken,
+        },
+      })
+      .then((response) => {
+        setUserConfig(response.data.config);
+        if (Object.values(response.data.config.quiz).every((x) => x === null))
+          return setFirstTime(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -103,6 +132,9 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         callLogout,
         signupWarning,
         setSignupWarning,
+        userConfig,
+        firstTime,
+        getConfiguration,
       }}
     >
       {children}
