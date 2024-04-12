@@ -114,8 +114,11 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       })
       .then((response) => {
         setUserConfig(response.data.config);
-        if (Object.values(response.data.config.quiz).every((x) => x === null))
+        if (Object.values(response.data.config.quiz).every((x) => x === null)) {
           return setFirstTime(true);
+        } else {
+          setFirstTime(false);
+        }
       })
       .catch((error) => {
         console.log(error);
