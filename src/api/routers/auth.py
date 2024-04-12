@@ -69,8 +69,14 @@ class UserSignup(BaseModel):
 async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(
         User.username == user_signup.username).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Username already exists")
+    existing_email = db.query(User).filter(
+        User.email == user_signup.email).first()
+
+    if existing_user.username:
+        raise HTTPException(status_code=400, detail={"user_exists": True})
+
+    if existing_email.email:
+        raise HTTPException(status_code=400, detail={"email_exists": True})
 
     # Hash the password before storing it
     hashed_password = bcrypt.hashpw(
@@ -85,7 +91,7 @@ async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
 
 
 # Logout route
-@router.post("/logout")
+@ router.post("/logout")
 async def logout(token: str = Header(...), db: Session = Depends(get_db)):
 
     if not token:
@@ -107,7 +113,7 @@ async def logout(token: str = Header(...), db: Session = Depends(get_db)):
 
 
 # Refresh token route
-@router.post("/token-refresh")
+@ router.post("/token-refresh")
 async def refresh_token(token: str = Header(...), db: Session = Depends(get_db)):
     if not token:
         raise HTTPException(status_code=401, detail="No token provided")
