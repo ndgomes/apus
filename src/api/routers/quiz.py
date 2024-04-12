@@ -40,7 +40,7 @@ async def register_quiz(
 
 
 # Endpoint for updating user quiz
-@router.put("quiz")
+@router.put("/quiz")
 async def update_quiz(
     profile_data: QuizBaseModel,
     current_user: User = Depends(get_current_user),
