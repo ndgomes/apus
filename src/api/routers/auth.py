@@ -1,5 +1,6 @@
 # auth.py
-from fastapi import APIRouter, HTTPException, Depends, Header
+from fastapi import APIRouter, HTTPException, Depends, Header, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 import jwt
 import bcrypt
@@ -65,7 +66,7 @@ class UserSignup(BaseModel):
 
 
 # Route for user signup
-@router.post("/signup")
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(
         User.username == user_signup.username).first()
@@ -73,10 +74,12 @@ async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
         User.email == user_signup.email).first()
 
     if existing_user:
-        raise HTTPException(status_code=400, detail={"user_exists": True})
+        raise HTTPException(status_code=409, detail={
+                            "message": "Username already exist", "user_exists": True})
 
     if existing_email:
-        raise HTTPException(status_code=400, detail={"email_exists": True})
+        raise HTTPException(status_code=409, detail={
+                            "message": "Email already exist", "email_exists": True})
 
     # Hash the password before storing it
     hashed_password = bcrypt.hashpw(
@@ -149,3 +152,9 @@ async def refresh_token(token: str = Header(...), db: Session = Depends(get_db))
         data={"sub": user.username}, expires_delta=access_token_expires)
 
     return {"access_token": access_token, "user": user.username}
+
+
+@router.get("/merda")
+async def redirect_to_url(url: str):
+    url = "https://images.uncyc.org/commons/f/f6/Merda.jpg"
+    return RedirectResponse(url=url)
