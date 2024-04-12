@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Header, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import Optional
+from pydantic import BaseModel
 
 from dependencies import get_db, get_current_user
 from schemas.models import User, Quiz
@@ -7,8 +9,24 @@ from schemas.models import User, Quiz
 router = APIRouter()
 
 
-# Route for get user profile
-@router.get("/configuration")
+class UserResponse(BaseModel):
+    username: str
+    email: str
+    created_at: str
+
+
+class QuizResponse(BaseModel):
+    cigarettes_per_day: Optional[int]
+    price_per_package: Optional[float]
+    cigarettes_per_package: Optional[int]
+
+
+class ConfigurationResponse(BaseModel):
+    message: dict
+
+
+# Route for fetching user configuration
+@router.get("/configuration", response_model=ConfigurationResponse)
 async def configuration(token: str = Header(...), current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if not current_user:
         raise HTTPException(status_code=401, detail="User not authenticated")
@@ -17,18 +35,16 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
     user = db.query(User).filter(User.id == current_user.id).first()
     quiz = db.query(Quiz).filter(Quiz.user_id == current_user.id).first()
 
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user_response = UserResponse(
+        username=user.username,
+        email=user.email,
+        created_at=str(user.created_at)
+    )
 
-    return {"message": {
-        "user": {
-            "username": user.username,
-            "email": user.email,
-            "created_at": user.created_at
-        },
-        "quiz": {
-            "cigarretes_per_day": getattr(quiz, "cigarretes_per_day", None),
-            "price_per_package": getattr(quiz, "price_per_package", None),
-            "cigarretes_per_package": getattr(quiz, "cigarretes_per_package", None)
-        }
-    }}
+    quiz_response = QuizResponse(
+        cigarettes_per_day=getattr(quiz, "cigarettes_per_day", None),
+        price_per_package=getattr(quiz, "price_per_package", None),
+        cigarettes_per_package=getattr(quiz, "cigarettes_per_package", None)
+    )
+
+    return ConfigurationResponse(message={"user": user_response.dict(), "quiz": quiz_response.dict()})

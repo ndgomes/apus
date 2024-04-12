@@ -46,7 +46,8 @@ async def login(user_login: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == user_login.email).first()
 
     if user is None or not bcrypt.checkpw(user_login.password.encode('utf-8'), user.password.encode('utf-8')):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+        raise HTTPException(
+            status_code=401, detail="Invalid email or password")
 
     access_token_expires = timedelta(minutes=30)
     access_token = create_access_token(
@@ -66,14 +67,17 @@ class UserSignup(BaseModel):
 # Route for user signup
 @router.post("/signup")
 async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
-    existing_user = db.query(User).filter(User.username == user_signup.username).first()
+    existing_user = db.query(User).filter(
+        User.username == user_signup.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
 
     # Hash the password before storing it
-    hashed_password = bcrypt.hashpw(user_signup.password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(
+        user_signup.password.encode('utf-8'), bcrypt.gensalt())
 
-    new_user = User(username=user_signup.username, email=user_signup.email, password=hashed_password.decode('utf-8'))
+    new_user = User(username=user_signup.username, email=user_signup.email,
+                    password=hashed_password.decode('utf-8'))
     db.add(new_user)
     db.commit()
 
@@ -135,6 +139,7 @@ async def refresh_token(token: str = Header(...), db: Session = Depends(get_db))
 
     # Create a new access token
     access_token_expires = timedelta(minutes=30)
-    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires)
 
     return {"access_token": access_token, "user": user.username}
