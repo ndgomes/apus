@@ -72,7 +72,7 @@ async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
     existing_email = db.query(User).filter(
         User.email == user_signup.email).first()
 
-    if existing_user.a:
+    if existing_user:
         raise HTTPException(status_code=400, detail={"user_exists": True})
 
     if existing_email:
