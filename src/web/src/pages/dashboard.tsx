@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import axios from "axios";
+import React, { useContext } from "react";
 import { AuthContext } from "../context/authContext";
 import { useDidMount } from "../hooks";
 import { QuizPage } from "./quiz";
