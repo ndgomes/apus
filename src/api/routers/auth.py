@@ -1,6 +1,5 @@
 # auth.py
 from fastapi import APIRouter, HTTPException, Depends, Header, status
-from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 import jwt
 import bcrypt
@@ -152,9 +151,3 @@ async def refresh_token(token: str = Header(...), db: Session = Depends(get_db))
         data={"sub": user.username}, expires_delta=access_token_expires)
 
     return {"access_token": access_token, "user": user.username}
-
-
-@router.get("/merda")
-async def redirect_to_url(url: str):
-    url = "https://images.uncyc.org/commons/f/f6/Merda.jpg"
-    return RedirectResponse(url=url)
