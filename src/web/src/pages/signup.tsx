@@ -1,19 +1,105 @@
 import { useState } from "react";
 import { Header, Signup } from "../components";
-import { signupFields } from "../constants/formFields";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function SignupPage() {
-  let fieldsState = {};
-  signupFields.forEach((field) => (fieldsState[field.id] = ""));
-  const [signupState, setSignupState] = useState(fieldsState);
+  let navigate = useNavigate();
 
-  const handleOnChange = (e: any) =>
-    setSignupState({ ...signupState, [e.target.id]: e.target.value });
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [loadingState, setLoadingState] = useState<boolean>(false);
+  const [validationPatternState, setValidationsPatternState] = useState<
+    string[]
+  >([]);
 
-  const handleOnSubmit = (e: any) => {
-    e.preventDefault();
-    console.log(signupState);
-    // createAccount();
+  const validationPasswordPattern = (password: string) => {
+    const validations: string[] = [];
+
+    if (password.match(/[a-z]/g)) {
+      validations.push("lowerCaseOK");
+    } else {
+      const findErrorIndex = validations.indexOf("lowerCaseOK");
+      if (findErrorIndex !== -1) {
+        validations.splice(findErrorIndex, 1);
+      }
+    }
+
+    if (password.match(/[A-Z]/g)) {
+      validations.push("upperCaseOK");
+    } else {
+      const findErrorIndex = validations.indexOf("upperCaseOK");
+      if (findErrorIndex !== -1) {
+        validations.splice(findErrorIndex, 1);
+      }
+    }
+
+    if (password.match(/[0-9]/g)) {
+      validations.push("numberCaseOK");
+    } else {
+      const findErrorIndex = validations.indexOf("numberCaseOK");
+      if (findErrorIndex !== -1) {
+        validations.splice(findErrorIndex, 1);
+      }
+    }
+
+    if (password.match(/[!@#$%^&*_=+-]/g)) {
+      validations.push("specialCharOK");
+    } else {
+      const findErrorIndex = validations.indexOf("specialCharOK");
+      if (findErrorIndex !== -1) {
+        validations.splice(findErrorIndex, 1);
+      }
+    }
+
+    if (password.match(/.{8,16}/)) {
+      validations.push("lenghtOK");
+    } else {
+      const findErrorIndex = validations.indexOf("lenghtOK");
+      if (findErrorIndex !== -1) {
+        validations.splice(findErrorIndex, 1);
+      }
+    }
+
+    return setValidationsPatternState(validations);
+  };
+
+  const handleOnChange = (e: any) => {
+    const { id, value } = e.target;
+    if (id === "username") setUsername(value);
+    if (id === "email") setEmail(value);
+    if (id === "password") {
+      setPassword(value);
+      setValidationsPatternState((prevValidations) => {
+        validationPasswordPattern(value);
+        return prevValidations;
+      });
+    }
+  };
+
+  const handleOnSubmit = (event: React.FormEvent) => {
+    if (validationPatternState.length === 5) {
+      event.preventDefault();
+      setLoadingState(true);
+
+      axios
+        .post("https://api.apu-s.space/signup", {
+          username,
+          email,
+          password,
+        })
+        .then((response) => {
+          console.log(response);
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error.message);
+        })
+        .finally(() => {
+          setLoadingState(false);
+        });
+    }
   };
 
   return (
@@ -24,8 +110,15 @@ export function SignupPage() {
           paragraph="Already have an account? "
           linkName="Login"
           linkUrl="/"
+          isLoading={loadingState}
         />
-        <Signup onSubmit={handleOnSubmit} onChange={handleOnChange} />
+        {!loadingState && (
+          <Signup
+            onSubmit={handleOnSubmit}
+            onChange={handleOnChange}
+            passwordValidationsState={validationPatternState}
+          />
+        )}
       </div>
     </div>
   );
