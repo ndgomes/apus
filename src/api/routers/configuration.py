@@ -42,9 +42,9 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
     )
 
     quiz_response = QuizResponse(
-        cigarettes_per_day=getattr(quiz, "cigarettes_per_day", None),
+        cigarettes_per_day=getattr(quiz, "cigarretes_per_day", None),
         price_per_package=getattr(quiz, "price_per_package", None),
-        cigarettes_per_package=getattr(quiz, "cigarettes_per_package", None)
+        cigarettes_per_package=getattr(quiz, "cigarretes_per_package", None)
     )
 
     return ConfigurationResponse(config={"user": user_response.dict(), "quiz": quiz_response.dict()})
