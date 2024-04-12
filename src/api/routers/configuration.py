@@ -22,7 +22,7 @@ class QuizResponse(BaseModel):
 
 
 class ConfigurationResponse(BaseModel):
-    message: dict
+    config: dict
 
 
 # Route for fetching user configuration
@@ -47,4 +47,4 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
         cigarettes_per_package=getattr(quiz, "cigarettes_per_package", None)
     )
 
-    return ConfigurationResponse(message={"user": user_response.dict(), "quiz": quiz_response.dict()})
+    return ConfigurationResponse(config={"user": user_response.dict(), "quiz": quiz_response.dict()})
