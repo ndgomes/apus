@@ -13,6 +13,7 @@ export function SignupPage() {
   const [validationPatternState, setValidationsPatternState] = useState<
     string[]
   >([]);
+  const [error, setError] = useState();
 
   const validationPasswordPattern = (password: string) => {
     const validations: string[] = [];
@@ -66,6 +67,7 @@ export function SignupPage() {
   };
 
   const handleOnChange = (e: any) => {
+    setError(undefined);
     const { id, value } = e.target;
     if (id === "username") setUsername(value);
     if (id === "email") setEmail(value);
@@ -91,10 +93,13 @@ export function SignupPage() {
         })
         .then((response) => {
           console.log(response);
+          setError(undefined);
+          setValidationsPatternState([]);
           navigate("/");
         })
         .catch((error) => {
-          console.log(error.message);
+          setError(error.response.data.detail);
+          setValidationsPatternState([]);
         })
         .finally(() => {
           setLoadingState(false);
@@ -117,6 +122,7 @@ export function SignupPage() {
             onSubmit={handleOnSubmit}
             onChange={handleOnChange}
             passwordValidationsState={validationPatternState}
+            isError={error}
           />
         )}
       </div>

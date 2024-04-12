@@ -5,6 +5,7 @@ import { FormAction } from "./formAction";
 import { CircleCheck, CircleX } from "lucide-react";
 
 interface SignupProps {
+  isError: any | undefined;
   passwordValidationsState: string[];
   onSubmit: (event: React.FormEvent) => void;
   onChange: (event: React.FormEvent) => void;
@@ -14,6 +15,14 @@ export function Signup(props: SignupProps) {
   return (
     <form className="mt-8 space-y-6" onSubmit={props.onSubmit}>
       <div className="">
+        {props.isError && (
+          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+            <CircleX height={15} width={15} color="red" />
+            {props.isError.user_exists && "Username already exists"}
+            {props.isError.email_exists && "Email already exists"}
+          </span>
+        )}
+
         {signupFields.map((field) => (
           <Input
             key={field.id}
