@@ -1,33 +1,23 @@
-import { useState } from "react";
 import { signupFields } from "../constants/formFields";
 
 import { Input } from "./input";
 import { FormAction } from "./formAction";
+import { CircleCheck, CircleX } from "lucide-react";
 
-export function Signup() {
-  let fieldsState = {};
-  signupFields.forEach((field) => (fieldsState[field.id] = ""));
-  const [signupState, setSignupState] = useState(fieldsState);
+interface SignupProps {
+  passwordValidationsState: string[];
+  onSubmit: (event: React.FormEvent) => void;
+  onChange: (event: React.FormEvent) => void;
+}
 
-  const handleChange = (e: any) =>
-    setSignupState({ ...signupState, [e.target.id]: e.target.value });
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log(signupState);
-    createAccount();
-  };
-
-  const createAccount = () => {};
-
+export function Signup(props: SignupProps) {
   return (
-    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+    <form className="mt-8 space-y-6" onSubmit={props.onSubmit}>
       <div className="">
         {signupFields.map((field) => (
           <Input
             key={field.id}
-            handleChange={handleChange}
-            value={signupState[field.id]}
+            handleChange={props.onChange}
             labelText={field.labelText}
             labelFor={field.labelFor}
             id={field.id}
@@ -35,9 +25,58 @@ export function Signup() {
             type={field.type}
             isRequired={field.isRequired}
             placeholder={field.placeholder}
+            pattern={
+              field.id === "password"
+                ? "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$"
+                : undefined
+            }
           />
         ))}
-        <FormAction onSubmit={handleSubmit} text="Signup" />
+
+        <div className="flex flex-col gap-1.5 mt-7">
+          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+            {props.passwordValidationsState.includes("lowerCaseOK") ? (
+              <CircleCheck height={15} width={15} color="green" />
+            ) : (
+              <CircleX height={15} width={15} color="red" />
+            )}
+            At least one lowercase letter (a - z)
+          </span>
+          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+            {props.passwordValidationsState.includes("upperCaseOK") ? (
+              <CircleCheck height={15} width={15} color="green" />
+            ) : (
+              <CircleX height={15} width={15} color="red" />
+            )}
+            At least one uppercase letter (A - Z)
+          </span>
+          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+            {props.passwordValidationsState.includes("numberCaseOK") ? (
+              <CircleCheck height={15} width={15} color="green" />
+            ) : (
+              <CircleX height={15} width={15} color="red" />
+            )}
+            At least one numeric value (0-9)
+          </span>
+          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+            {props.passwordValidationsState.includes("specialCharOK") ? (
+              <CircleCheck height={15} width={15} color="green" />
+            ) : (
+              <CircleX height={15} width={15} color="red" />
+            )}
+            At least one special symbol (!@#$%^&*=+-_)
+          </span>
+          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+            {props.passwordValidationsState.includes("lenghtOK") ? (
+              <CircleCheck height={15} width={15} color="green" />
+            ) : (
+              <CircleX height={15} width={15} color="red" />
+            )}
+            To be greater than or equal to 8 and less or equal to 16
+          </span>
+        </div>
+
+        <FormAction text="Signup" />
       </div>
     </form>
   );
