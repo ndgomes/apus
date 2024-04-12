@@ -9,6 +9,7 @@ interface SignupProps {
   passwordValidationsState: string[];
   onSubmit: (event: React.FormEvent) => void;
   onChange: (event: React.FormEvent) => void;
+  onFocus: () => void;
 }
 
 export function Signup(props: SignupProps) {
@@ -34,6 +35,7 @@ export function Signup(props: SignupProps) {
             type={field.type}
             isRequired={field.isRequired}
             placeholder={field.placeholder}
+            handleOnFocus={props.onFocus}
             pattern={
               field.id === "password"
                 ? "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$"

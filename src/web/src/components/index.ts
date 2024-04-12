@@ -4,3 +4,5 @@ export * from "./signup";
 export * from "./input";
 export * from "./formExtra";
 export * from "./formAction";
+export * from "./quiz";
+export * from "./loading";

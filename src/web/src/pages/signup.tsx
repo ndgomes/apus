@@ -67,7 +67,6 @@ export function SignupPage() {
   };
 
   const handleOnChange = (e: any) => {
-    setError(undefined);
     const { id, value } = e.target;
     if (id === "username") setUsername(value);
     if (id === "email") setEmail(value);
@@ -78,6 +77,10 @@ export function SignupPage() {
         return prevValidations;
       });
     }
+  };
+
+  const handleOnFocus = () => {
+    setError(undefined);
   };
 
   const handleOnSubmit = (event: React.FormEvent) => {
@@ -121,6 +124,7 @@ export function SignupPage() {
           <Signup
             onSubmit={handleOnSubmit}
             onChange={handleOnChange}
+            onFocus={handleOnFocus}
             passwordValidationsState={validationPatternState}
             isError={error}
           />
