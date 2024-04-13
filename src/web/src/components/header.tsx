@@ -24,7 +24,7 @@ export function Header({
   return (
     <div className="mb-10">
       <div className="flex justify-center">
-        <img alt="" className="h-14 w-14" src={apusLogo} />
+        <img alt="" className="h-24 w-24" src={apusLogo} />
       </div>
       {isLoading ? (
         <Loading />
@@ -42,7 +42,7 @@ export function Header({
             </h4>
           )}
           <p className="text-center text-sm text-gray-600 mt-3 dark:text-white">
-            {paragraph}{" "}
+            {paragraph}
             <Link
               to={linkUrl}
               className="font-medium text-purple-600 hover:text-purple-500"

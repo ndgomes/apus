@@ -23,15 +23,15 @@ export function App() {
     <>
       <AuthProvider>
         <Routes>
-          <Route path="*" element={<NotFoundPage />} />
-
-          <Route index path="/" element={<LoginPage />} />
-          <Route path="signup" element={<SignupPage />} />
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
 
           <Route element={<RequireAuth />}>
-            <Route path="quiz" element={<QuizPage />} />
-            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="/quiz" element={<QuizPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
           </Route>
+
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
 
