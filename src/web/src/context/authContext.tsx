@@ -2,6 +2,7 @@ import { createContext, useState, ReactNode, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { userConfigInterface } from "../pages";
+import { useNavigate } from "react-router-dom";
 
 interface CurrentUserContextType {
   authToken: string | undefined;
@@ -18,7 +19,7 @@ interface CurrentUserContextType {
   firstTime: boolean;
 
   callLogout: () => void;
-  getConfiguration: () => void;
+  getConfiguration: (authTokenProp?: string) => void;
 }
 
 interface Props {
@@ -30,6 +31,8 @@ export const AuthContext = createContext<CurrentUserContextType>(
 );
 
 export const AuthProvider: React.FC<Props> = ({ children }) => {
+  let navigate = useNavigate();
+
   let [authToken, setAuthToken] = useState<string | undefined>(() =>
     localStorage.getItem("authToken")
       ? JSON.parse(localStorage.getItem("authToken") || "")
@@ -106,19 +109,21 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     return () => clearInterval(interval);
   }, [authToken]);
 
-  function getConfiguration() {
+  function getConfiguration(authTokenProp?: string) {
     axios
       .get("https://api.apu-s.space/configuration", {
         headers: {
-          token: authToken,
+          token: authTokenProp ? authTokenProp : authToken,
         },
       })
       .then((response) => {
         setUserConfig(response.data.config);
         if (Object.values(response.data.config.quiz).every((x) => x === null)) {
-          return setFirstTime(true);
+          setFirstTime(true);
+          navigate("/quiz");
         } else {
           setFirstTime(false);
+          navigate("/dashboard");
         }
       })
       .catch((error) => {

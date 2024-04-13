@@ -1,19 +1,11 @@
 import { useContext, useState } from "react";
 import { Header, Quiz } from "../components";
-import { userConfigInterface } from "./dashboard";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 
-interface QuizPageProps {
-  isFirstTime: boolean;
-  userConfig: userConfigInterface | undefined;
-}
-
-export function QuizPage(props: QuizPageProps) {
-  let navigate = useNavigate();
-
-  const { authToken, getConfiguration } = useContext(AuthContext);
+export function QuizPage() {
+  const { authToken, firstTime, userConfig, getConfiguration } =
+    useContext(AuthContext);
 
   const [quest1, setQuest1] = useState<number>();
   const [quest2, setQuest2] = useState<number>();
@@ -46,11 +38,9 @@ export function QuizPage(props: QuizPageProps) {
           },
           { headers: { token: authToken } }
         )
-        .then((response) => {
-          console.log(response);
+        .then(() => {
           setErrorState(false);
           getConfiguration();
-          navigate("/dashboard");
         })
         .catch((error) => {
           console.log(error);
@@ -69,8 +59,8 @@ export function QuizPage(props: QuizPageProps) {
           heading="First questionnaire"
           paragraph="This data will help us to give you the best strategy for ending your addiction to cigarettes "
           isLoading={loadingState}
-          isFirstTime={props.isFirstTime}
-          username={props.userConfig?.user.username}
+          isFirstTime={firstTime}
+          username={userConfig?.user.username}
         />
         <Quiz
           isError={errorState}

@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import { useDidMount } from "../hooks";
-import { QuizPage } from "./quiz";
 
 export interface userConfigInterface {
   quiz: {
@@ -17,18 +15,10 @@ export interface userConfigInterface {
 }
 
 export const DashboardPage: React.FC = () => {
-  const { getConfiguration, firstTime, userConfig, callLogout } =
-    useContext(AuthContext);
-
-  useDidMount(() => {
-    getConfiguration();
-  });
+  const { callLogout } = useContext(AuthContext);
 
   return (
     <>
-      {firstTime && (
-        <QuizPage isFirstTime={firstTime} userConfig={userConfig} />
-      )}
       <strong className="text-red">JÁ RESPONDESTE AO NOSSO QUESTIONARIO</strong>
       <button onClick={() => callLogout()}>Log out</button>
     </>
