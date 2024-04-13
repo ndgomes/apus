@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { DashboardPage, LoginPage, SignupPage } from "./pages";
+import { DashboardPage, LoginPage, QuizPage, SignupPage } from "./pages";
 import { Moon, Sun } from "lucide-react";
 import { AuthProvider } from "./context/authContext";
 import RequireAuth from "./utils/requiredAuth";
@@ -18,6 +18,7 @@ export function App() {
       <AuthProvider>
         <Routes>
           <Route element={<RequireAuth />}>
+            <Route path="/quiz" element={<QuizPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
           </Route>
           <Route path="/" element={<LoginPage />} />
