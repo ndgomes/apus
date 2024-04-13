@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import React from "react";
+import { SideBar } from "../components";
 
 export interface userConfigInterface {
   quiz: {
@@ -15,12 +15,14 @@ export interface userConfigInterface {
 }
 
 export const DashboardPage: React.FC = () => {
-  const { callLogout } = useContext(AuthContext);
-
   return (
-    <>
-      <strong className="text-red">JÁ RESPONDESTE AO NOSSO QUESTIONARIO</strong>
-      <button onClick={() => callLogout()}>Log out</button>
-    </>
+    <section className="flex gap-6">
+      <SideBar />
+      <div className="m-3 text-xl text-gray-900 font-semibold">
+        <strong className="text-red">
+          JÁ RESPONDESTE AO NOSSO QUESTIONARIO
+        </strong>
+      </div>
+    </section>
   );
 };

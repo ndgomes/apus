@@ -1,3 +1,5 @@
+export * from "./dashboard";
+
 export * from "./header";
 export * from "./login";
 export * from "./signup";
