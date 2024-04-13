@@ -11,12 +11,11 @@ interface CurrentUserContextType {
   user: string | undefined;
   setUser: React.Dispatch<React.SetStateAction<string | undefined>>;
 
-  signupWarning: boolean;
-  setSignupWarning: React.Dispatch<React.SetStateAction<boolean>>;
-
   userConfig: userConfigInterface | undefined;
 
   firstTime: boolean;
+
+  clearStates(): void;
 
   callLogout: () => void;
   getConfiguration: (authTokenProp?: string) => void;
@@ -51,10 +50,19 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
   let [firstTime, setFirstTime] = useState<boolean>(false);
 
-  let [signupWarning, setSignupWarning] = useState<boolean>(false);
+  //Clear all states
+  function clearStates() {
+    setAuthToken(undefined);
+    setUser(undefined);
+    setUserConfig(undefined);
+    setFirstTime(false);
+    localStorage.removeItem("authToken");
+  }
 
   //Call logout
   function callLogout() {
+    clearStates();
+
     axios
       .post(
         "https://api.apu-s.space/logout",
@@ -139,11 +147,10 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         setUser,
         authToken,
         callLogout,
-        signupWarning,
-        setSignupWarning,
         userConfig,
         firstTime,
         getConfiguration,
+        clearStates,
       }}
     >
       {children}
