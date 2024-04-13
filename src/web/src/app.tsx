@@ -27,7 +27,7 @@ export function App() {
       </AuthProvider>
 
       <button
-        className="absolute bottom-8 right-8 border-2 rounded-lg p-2.5 border-purple-600 hover:border-purple-500"
+        className="absolute top-8 right-8 border-2 rounded-lg p-2.5 border-purple-600 hover:border-purple-500"
         onClick={() => darkModeHandler()}
       >
         {!dark && <Sun color="white" fill="white" />}
