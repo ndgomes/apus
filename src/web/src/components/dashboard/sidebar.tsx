@@ -1,19 +1,21 @@
 import React, { useContext } from "react";
-import {
-  SquareChevronRight,
-  SquareChevronLeft,
-  LogOut,
-  CircleUser,
-} from "lucide-react";
+import { LogOut, CircleUser, ChevronRight, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { sideBarMenu } from "../../constants/dashboard";
 import { Link } from "react-router-dom";
 import apusLogo from "../../assets/apusLogo.png";
 import { AuthContext } from "../../context/authContext";
+import { Moon, Sun } from "lucide-react";
 
 export function SideBar() {
   const [open, setOpen] = useState(true);
+  const [dark, setDark] = useState(false);
   const { callLogout, userConfig } = useContext(AuthContext);
+
+  const darkModeHandler = () => {
+    setDark(!dark);
+    document.body.classList.toggle("dark");
+  };
 
   return (
     <div
@@ -27,7 +29,7 @@ export function SideBar() {
           style={{
             transitionDelay: `300ms`,
           }}
-          className={`flex items-center whitespace-pre duration-500 ${
+          className={`flex items-center text-black dark:text-white whitespace-pre duration-500 ${
             !open && "opacity-0 translate-x-28 overflow-hidden "
           }`}
         >
@@ -46,22 +48,16 @@ export function SideBar() {
             <div>
               {React.createElement(menu?.icon, {
                 size: "20",
+                color: dark ? "#000" : "#FFF",
               })}
             </div>
             <h2
               style={{
                 transitionDelay: `${i + 3}00ms`,
               }}
-              className={` whitespace-pre duration-500 ${
+              className={`text-black dark:text-white whitespace-pre duration-500 ${
                 !open && "opacity-0 translate-x-28 overflow-hidden"
               }`}
-            >
-              {menu?.name}
-            </h2>
-            <h2
-              className={`${
-                open && "hidden"
-              } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
             >
               {menu?.name}
             </h2>
@@ -71,29 +67,40 @@ export function SideBar() {
       <div className="mt-auto">
         <div className="flex justify-end pb-4">
           {open ? (
-            <SquareChevronLeft
-              size={24}
-              className="cursor-pointer"
-              onClick={() => setOpen(!open)}
-            />
+            <>
+              <button className="mr-auto" onClick={() => darkModeHandler()}>
+                {!dark && <Sun size={18} color="white" fill="white" />}
+                {dark && <Moon size={20} color="black" fill="black" />}
+              </button>
+              <button onClick={() => setOpen(!open)}>
+                <ChevronLeft color={dark ? "#000" : "#FFF"} size={24} />
+              </button>
+            </>
           ) : (
-            <SquareChevronRight
-              size={24}
-              className="cursor-pointer"
-              onClick={() => setOpen(!open)}
-            />
+            <button onClick={() => setOpen(!open)}>
+              <ChevronRight color={dark ? "#000" : "#FFF"} size={24} />
+            </button>
           )}
         </div>
-        <div className="border-t flex py-4">
-          <CircleUser size={20} />
-          {open && (
-            <div className={"w-full flex justify-between items-center"}>
-              <h4 className="font-semibold pl-3">
-                {userConfig?.user.username}
-              </h4>
-              <LogOut size={20} onClick={() => callLogout()} color="#9333EA" />
-            </div>
-          )}
+        <div className="border-t border-black dark:border-white flex py-4">
+          <div className={"w-full flex items-center"}>
+            {open && (
+              <>
+                <CircleUser color={dark ? "#000" : "#FFF"} size={22} />
+                <h4 className="text-black dark:text-white font-semibold pl-3 mr-auto">
+                  {userConfig?.user.username}
+                </h4>
+              </>
+            )}
+            <button
+              style={{
+                transitionDelay: "300ms",
+              }}
+              onClick={() => callLogout()}
+            >
+              <LogOut size={20} color="#9333EA" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
