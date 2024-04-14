@@ -1,5 +1,6 @@
 import React from "react";
 import { SideBar } from "../components";
+import { useDidMount } from "../hooks";
 
 export interface userConfigInterface {
   quiz: {
@@ -15,6 +16,8 @@ export interface userConfigInterface {
 }
 
 export const DashboardPage: React.FC = () => {
+  useDidMount(() => window.scrollTo(0, 0));
+
   return (
     <section className="flex gap-6">
       <SideBar />
