@@ -1,4 +1,5 @@
 import { CircleX } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface FormExtraProps {
   error: boolean;
@@ -31,12 +32,12 @@ export function FormExtra(props: FormExtraProps) {
         </div>
 
         <div className="text-sm">
-          <a
-            href="#"
+          <Link
+            to={"/forgot-password"}
             className="font-medium text-purple-600 hover:text-purple-500"
           >
             Forgot your password?
-          </a>
+          </Link>
         </div>
       </div>
     </>

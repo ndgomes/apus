@@ -8,7 +8,7 @@ export function NotFoundPage() {
           heading="Page not found!"
           paragraph="To access this page you need to login first. "
           linkName="Login"
-          linkUrl="/login"
+          linkUrl="/"
         />
       </div>
     </div>

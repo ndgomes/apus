@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import {
   DashboardPage,
+  ForgotPasswordPage,
   LoginPage,
   NotFoundPage,
   QuizPage,
@@ -15,6 +16,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         <Route element={<RequireAuth />}>
           <Route path="/quiz" element={<QuizPage />} />
