@@ -65,7 +65,7 @@ export function SideBar() {
         ))}
       </div>
       <div className="mt-auto">
-        <div className="flex justify-end pb-4">
+        <div className="w-full flex items-center pb-4">
           {open ? (
             <>
               <button className="mr-auto" onClick={() => darkModeHandler()}>
