@@ -43,7 +43,7 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
     quiz = db.query(Quiz).filter(Quiz.user_id == current_user.id).first()
 
     smoke_log = db.query(UserActivityLog).filter(
-        UserActivityLog.user_id).order_by(desc(UserActivityLog.smoking_time)).first()
+        UserActivityLog.user_id == current_user.id).order_by(desc(UserActivityLog.smoking_time)).first()
 
     user_response = UserResponse(
         username=user.username,

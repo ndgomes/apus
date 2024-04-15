@@ -12,6 +12,8 @@ Our journey is guided by a commitment to health, respect for individual freedom,
 
 ## Objective
 
+The primary objective of Project APUS is to orchestrate a transformative journey towards emancipation from the shackles of smoking addiction. We aim to forge a path illuminated by innovation and compassion, where every participant is empowered to rewrite their narrative of dependence into one of resilience and vitality. By leveraging a multidimensional approach that melds scientific rigor with empathetic support, we aspire to redefine the narrative of cessation, turning each milestone into a testament of strength and liberation. Our mission is not just to break habits, but to ignite a revolution of self-discovery and empowerment, where the pursuit of health and freedom intertwine seamlessly.
+
 ## Documentation and demonstration
 
 ## Contributing
