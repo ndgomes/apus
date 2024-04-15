@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { LogOut, CircleUser, ChevronRight, ChevronLeft } from "lucide-react";
+import { Power, CircleUser, ChevronRight, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { sideBarMenu } from "../../constants/dashboard";
 import { Link } from "react-router-dom";
@@ -23,7 +23,7 @@ export function SideBar() {
         open ? "w-72" : "w-16"
       } duration-500 text-gray-100 px-4`}
     >
-      <div className="py-3 flex gap-2">
+      <div className="py-6 flex gap-2">
         <img src={apusLogo} alt="logo" height={24} width={24} />
         <strong
           style={{
@@ -66,39 +66,52 @@ export function SideBar() {
       </div>
       <div className="mt-auto">
         <div className="w-full flex items-center pb-4">
-          {open ? (
-            <>
-              <button className="mr-auto" onClick={() => darkModeHandler()}>
-                {!dark && <Sun size={18} color="white" fill="white" />}
-                {dark && <Moon size={20} color="black" fill="black" />}
-              </button>
-              <button onClick={() => setOpen(!open)}>
-                <ChevronLeft color={dark ? "#000" : "#FFF"} size={24} />
-              </button>
-            </>
-          ) : (
-            <button onClick={() => setOpen(!open)}>
+          <button
+            style={{
+              transitionDelay: `300ms`,
+            }}
+            className={`mr-auto whitespace-pre duration-500 ${
+              !open && "opacity-0 translate-x-28 overflow-hidden"
+            }`}
+            onClick={() => darkModeHandler()}
+          >
+            {!dark && <Sun size={18} color="white" fill="white" />}
+            {dark && <Moon size={20} color="black" fill="black" />}
+          </button>
+          <button onClick={() => setOpen(!open)}>
+            {open ? (
+              <ChevronLeft color={dark ? "#000" : "#FFF"} size={24} />
+            ) : (
               <ChevronRight color={dark ? "#000" : "#FFF"} size={24} />
-            </button>
-          )}
+            )}
+          </button>
         </div>
         <div className="border-t border-black dark:border-white flex py-4">
           <div className={"w-full flex items-center"}>
-            {open && (
-              <>
-                <CircleUser color={dark ? "#000" : "#FFF"} size={22} />
-                <h4 className="text-black dark:text-white font-semibold pl-3 mr-auto">
-                  {userConfig?.user.username}
-                </h4>
-              </>
-            )}
-            <button
+            <CircleUser
               style={{
-                transitionDelay: "300ms",
+                transitionDelay: `300ms`,
               }}
-              onClick={() => callLogout()}
+              className={`text-black dark:text-white whitespace-pre duration-500 ${
+                !open && "opacity-0 translate-x-28 overflow-hidden"
+              }
+              ${open && "mr-2"}`}
+              color={dark ? "#000" : "#FFF"}
+              size={22}
+            />
+            <h4
+              style={{
+                transitionDelay: `300ms`,
+              }}
+              className={`text-black dark:text-white whitespace-pre duration-500 ${
+                !open && "opacity-0 translate-x-28 overflow-hidden"
+              }`}
             >
-              <LogOut size={20} color="#9333EA" />
+              {userConfig?.user.username}
+            </h4>
+
+            <button className={"ml-auto"} onClick={() => callLogout()}>
+              <Power size={20} color="#9333EA" />
             </button>
           </div>
         </div>
