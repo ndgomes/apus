@@ -47,6 +47,7 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
     user_response = UserResponse(
         username=user.username,
         email=user.email,
+        is_first_time=user.is_first_time,
         created_at=str(user.created_at)
     )
 
