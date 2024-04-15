@@ -1,5 +1,5 @@
 # models.py
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
@@ -11,6 +11,7 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
+    is_first_time = Column(Boolean, default=True)
     username = Column(String, unique=True)
     email = Column(String, unique=True)
     password = Column(String)
@@ -20,7 +21,8 @@ class User(Base):
     # Define relationships
     profile = relationship("Quiz", back_populates="user")
     activity_logs = relationship("UserActivityLog", back_populates="user")
-    weekly_statistics = relationship("UserWeekStatistics", back_populates="user")
+    weekly_statistics = relationship(
+        "UserWeekStatistics", back_populates="user")
 
 
 class Quiz(Base):
@@ -40,8 +42,8 @@ class UserActivityLog(Base):
     __tablename__ = 'user_activity_logs'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    smoking_time = Column(DateTime)
-    created_at = Column(DateTime, default=datetime.now)
+    smoking_time = Column(DateTime, default=datetime.now)
+    next_cigarrete = Column(DateTime)
 
     user = relationship("User", back_populates="activity_logs")
 

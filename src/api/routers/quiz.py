@@ -1,4 +1,4 @@
-# user.py
+# quiz.py
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -30,10 +30,14 @@ async def register_quiz(
     quiz = Quiz(
         user_id=current_user.id,
         cigarretes_per_day=profile_data.cigarettes_per_day,
-        price_per_package=profile_data.price_per_package, 
+        price_per_package=profile_data.price_per_package,
         cigarretes_per_package=profile_data.cigarettes_per_package
     )
     db.add(quiz)
+    db.commit()
+
+    # First time user False
+    current_user.is_first_time = False
     db.commit()
 
     return {"message": "user quiz created successfully"}
