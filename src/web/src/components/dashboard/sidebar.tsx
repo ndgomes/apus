@@ -89,13 +89,7 @@ export function SideBar() {
         <div className="border-t border-black dark:border-white flex py-4">
           <div className={"w-full flex items-center"}>
             <CircleUser
-              style={{
-                transitionDelay: `300ms`,
-              }}
-              className={`text-black dark:text-white whitespace-pre duration-500 ${
-                !open && "opacity-0 translate-x-28 overflow-hidden"
-              }
-              ${open && "mr-2"}`}
+              className={`${open && "mr-2"}`}
               color={dark ? "#000" : "#FFF"}
               size={22}
             />
