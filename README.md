@@ -14,8 +14,6 @@ Our journey is guided by a commitment to health, respect for individual freedom,
 
 ## Documentation and demonstration
 
-## Releases download
-
 ## Contributing
 
 ### Contributing Guide
@@ -26,7 +24,13 @@ Our journey is guided by a commitment to health, respect for individual freedom,
 
 ### Status & bugs
 
+Currently Apus is under heavy development, if you wish to report bugs or ask for new features, you can directly use the [Github issues module](https://github.com/cunhaac/apus/issues).
+
+
 ### Discussion
+
+If you need support or you wish to engage a discussion about the Apus project, feel free to join us on our [Discord channel](https://discord.gg/FmnG58wDQf).
+
 
 ## About
 
