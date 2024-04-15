@@ -36,7 +36,7 @@ async def register_quiz(
     db.add(quiz)
     db.commit()
 
-    # First time user False
+    # First time user is now False
     current_user.is_first_time = False
     db.commit()
 
