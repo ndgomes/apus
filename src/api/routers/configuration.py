@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Header, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from typing import Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 from dependencies import get_db, get_current_user
-from schemas.models import User, Quiz
+from schemas.models import User, Quiz, UserActivityLog
 
 router = APIRouter()
 
@@ -21,6 +23,11 @@ class QuizResponse(BaseModel):
     cigarettes_per_package: Optional[int]
 
 
+class SmokeLogResponse(BaseModel):
+    smoking_time: Optional[datetime]
+    next_cigarrete: Optional[datetime]
+
+
 class ConfigurationResponse(BaseModel):
     config: dict
 
@@ -34,6 +41,8 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
     # Query user profile information
     user = db.query(User).filter(User.id == current_user.id).first()
     quiz = db.query(Quiz).filter(Quiz.user_id == current_user.id).first()
+    smoke_log = db.query(UserActivityLog).filter(
+        UserActivityLog.user_id).order_by(desc(UserActivityLog.smoking_time)).first()
 
     user_response = UserResponse(
         username=user.username,
@@ -47,4 +56,7 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
         cigarettes_per_package=getattr(quiz, "cigarretes_per_package", None)
     )
 
-    return ConfigurationResponse(config={"user": user_response.dict(), "quiz": quiz_response.dict()})
+    smoke_log_response = SmokeLogResponse(smoking_time=getattr(smoke_log, "smoking_time", None),
+                                          next_cigarrete=getattr(smoke_log, "next_cigarrete", None))
+
+    return ConfigurationResponse(config={"user": user_response.dict(), "quiz": quiz_response.dict(), "smoke_log": smoke_log_response.dict()})
