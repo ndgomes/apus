@@ -1,11 +1,13 @@
 # auth.py
-from fastapi import APIRouter, HTTPException, Depends, Header
-from sqlalchemy.orm import Session
 import jwt
 import bcrypt
 import uuid
+
 from datetime import datetime, timedelta
 from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException, Depends, Header, status
+from sqlalchemy.orm import Session
+
 
 from settings import SECRET_KEY, ALGORITHM
 from dependencies import get_db
@@ -65,7 +67,7 @@ class UserSignup(BaseModel):
 
 
 # Route for user signup
-@router.post("/signup")
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(
         User.username == user_signup.username).first()
@@ -73,10 +75,12 @@ async def signup(user_signup: UserSignup, db: Session = Depends(get_db)):
         User.email == user_signup.email).first()
 
     if existing_user:
-        raise HTTPException(status_code=400, detail={"user_exists": True})
+        raise HTTPException(status_code=409, detail={
+                            "message": "Username already exist", "user_exists": True})
 
     if existing_email:
-        raise HTTPException(status_code=400, detail={"email_exists": True})
+        raise HTTPException(status_code=409, detail={
+                            "message": "Email already exist", "email_exists": True})
 
     # Hash the password before storing it
     hashed_password = bcrypt.hashpw(
