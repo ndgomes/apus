@@ -17,7 +17,7 @@ export const DashboardPage: React.FC = () => {
       <div className="bg-gray-100 dark:bg-gray-800 w-screen">
         <ProgressCards
           phaseLevel="5"
-          phaseReduction="80%"
+          phaseReduction="80"
           savedCigarettes="25"
         />
       </div>
