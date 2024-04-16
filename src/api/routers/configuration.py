@@ -14,6 +14,7 @@ router = APIRouter()
 class UserResponse(BaseModel):
     username: str
     email: str
+    is_first_time: bool
     created_at: str
 
 

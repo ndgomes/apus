@@ -1,8 +1,20 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { userConfigInterface } from "../pages";
 import { useNavigate } from "react-router-dom";
+
+export interface userConfigInterface {
+  quiz: {
+    cigarettes_per_day: number | null;
+    price_per_package: number | null;
+    cigarettes_per_package: number | null;
+  };
+  user: {
+    username: string;
+    email: string;
+    password: string;
+  };
+}
 
 interface CurrentUserContextType {
   authToken: string | undefined;
@@ -44,9 +56,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       : undefined
   );
 
-  const [userConfig, setUserConfig] = useState<
-    userConfigInterface | undefined
-  >();
+  let [userConfig, setUserConfig] = useState<userConfigInterface | undefined>();
 
   let [firstTime, setFirstTime] = useState<boolean>(false);
 
