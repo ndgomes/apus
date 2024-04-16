@@ -1,14 +1,10 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Header, Signup } from "../components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDidMount } from "../hooks";
-import { AuthContext } from "../context/authContext";
 
 export function SignupPage() {
   let navigate = useNavigate();
-
-  const { clearStates } = useContext(AuthContext);
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -113,8 +109,6 @@ export function SignupPage() {
         });
     }
   };
-
-  useDidMount(clearStates);
 
   return (
     <div className="bg-gray-200 dark:bg-gray-900 min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
