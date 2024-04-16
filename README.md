@@ -24,18 +24,18 @@ The primary objective of Project APUS is to orchestrate a transformative journey
 
 ## Community
 
-### Status & bugs
+### - Status & bugs
 
 Currently Apus is under heavy development, if you wish to report bugs or ask for new features, you can directly use the [Github issues module](https://github.com/cunhaac/apus/issues).
 
 
-### Discussion
+### - Discussion
 
 If you need support or you wish to engage a discussion about the Apus project, feel free to join us on our [Discord channel](https://discord.gg/FmnG58wDQf).
 
 
 ## About
 
-### Authors
+### - Authors
 - [Pedro Cunha](https://github.com/cunhaac)</br>
 - [Nuno Gomes](https://github.com/ndgomes)
