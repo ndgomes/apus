@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { SideBar } from "../components";
+import { ProgressCards, SideBar } from "../components";
 import { useDidMount } from "../hooks";
 import { AuthContext } from "../context/authContext";
 
@@ -12,10 +12,14 @@ export const DashboardPage: React.FC = () => {
   });
 
   return (
-    <section className="flex gap-6">
+    <section className="flex">
       <SideBar />
-      <div className="m-3 text-xl text-gray-900 font-semibold">
-        JÁ RESPONDESTE AO NOSSO QUESTIONARIO
+      <div className="bg-gray-100 dark:bg-gray-800 w-screen">
+        <ProgressCards
+          phaseLevel="5"
+          phaseReduction="80%"
+          savedCigarettes="25"
+        />
       </div>
     </section>
   );
