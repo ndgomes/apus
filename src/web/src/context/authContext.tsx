@@ -3,16 +3,21 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export interface userConfigInterface {
+export interface userConfigurationResponse {
   quiz: {
     cigarettes_per_day: number | null;
     price_per_package: number | null;
     cigarettes_per_package: number | null;
   };
+  smoke_log: {
+    smoking_time: Date | null;
+    next_cigarrete: Date | null;
+  };
   user: {
     username: string;
     email: string;
     password: string;
+    is_first_time: boolean;
   };
 }
 
@@ -23,11 +28,7 @@ interface CurrentUserContextType {
   user: string | undefined;
   setUser: React.Dispatch<React.SetStateAction<string | undefined>>;
 
-  userConfig: userConfigInterface | undefined;
-
-  firstTime: boolean;
-
-  clearStates(): void;
+  userConfig: userConfigurationResponse | undefined;
 
   callLogout: () => void;
   getConfiguration: (authTokenProp?: string) => void;
@@ -56,23 +57,12 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       : undefined
   );
 
-  let [userConfig, setUserConfig] = useState<userConfigInterface | undefined>();
-
-  let [firstTime, setFirstTime] = useState<boolean>(false);
-
-  //Clear all states
-  function clearStates() {
-    setAuthToken(undefined);
-    setUser(undefined);
-    setUserConfig(undefined);
-    setFirstTime(false);
-    localStorage.removeItem("authToken");
-  }
+  const [userConfig, setUserConfig] = useState<
+    userConfigurationResponse | undefined
+  >();
 
   //Call logout
   function callLogout() {
-    clearStates();
-
     axios
       .post(
         "https://api.apu-s.space/logout",
@@ -136,13 +126,9 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       })
       .then((response) => {
         setUserConfig(response.data.config);
-        if (Object.values(response.data.config.quiz).every((x) => x === null)) {
-          setFirstTime(true);
-          navigate("/quiz");
-        } else {
-          setFirstTime(false);
-          navigate("/dashboard");
-        }
+        response.data.config.user.is_first_time
+          ? navigate("/quiz")
+          : navigate("/dashboard");
       })
       .catch((error) => {
         console.log(error);
@@ -158,9 +144,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         authToken,
         callLogout,
         userConfig,
-        firstTime,
         getConfiguration,
-        clearStates,
       }}
     >
       {children}

@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { SideBar } from "../components";
 import { useDidMount } from "../hooks";
+import { AuthContext } from "../context/authContext";
 
 export const DashboardPage: React.FC = () => {
-  useDidMount(() => window.scrollTo(0, 0));
+  const { authToken, getConfiguration } = useContext(AuthContext);
+
+  useDidMount(() => {
+    window.scrollTo(0, 0);
+    getConfiguration(authToken);
+  });
 
   return (
     <section className="flex gap-6">

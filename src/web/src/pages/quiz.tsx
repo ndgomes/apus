@@ -4,8 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../context/authContext";
 
 export function QuizPage() {
-  const { authToken, firstTime, userConfig, getConfiguration } =
-    useContext(AuthContext);
+  const { authToken, getConfiguration } = useContext(AuthContext);
 
   const [quest1, setQuest1] = useState<number>();
   const [quest2, setQuest2] = useState<number>();
@@ -59,8 +58,6 @@ export function QuizPage() {
           heading="First questionnaire"
           paragraph="This data will help us to give you the best strategy for ending your addiction to cigarettes "
           isLoading={loadingState}
-          isFirstTime={firstTime}
-          username={userConfig?.user.username}
         />
         <Quiz
           isError={errorState}
