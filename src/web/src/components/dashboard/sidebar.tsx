@@ -38,30 +38,59 @@ export function SideBar() {
       </div>
       <div className="mt-4 flex flex-col gap-4 relative">
         {sideBarMenu?.map((menu, i) => (
-          <Link
-            to={menu?.link}
-            key={i}
-            className={` ${
-              menu?.margin && "mt-5"
-            } group flex items-center text-sm gap-3.5 font-medium pt-2 pb-2 hover:bg-gray-800 rounded-md`}
-          >
-            <div>
-              {React.createElement(menu?.icon, {
-                size: "20",
-                color: dark ? "#000" : "#FFF",
-              })}
-            </div>
-            <h2
-              style={{
-                transitionDelay: `${i + 3}00ms`,
-              }}
-              className={`text-black dark:text-white whitespace-pre duration-500 ${
-                !open && "opacity-0 translate-x-28 overflow-hidden"
-              }`}
-            >
-              {menu?.name}
-            </h2>
-          </Link>
+          <>
+            {menu?.disable ? (
+              <button
+                className={`${
+                  menu?.margin && "mt-5"
+                } group flex items-center text-sm gap-3.5 font-medium pt-2 pb-2`}
+                disabled
+                title="Coming Soon"
+              >
+                <div>
+                  {React.createElement(menu?.icon, {
+                    size: "20",
+                    color: "#94A3B8",
+                  })}
+                </div>
+                <h2
+                  style={{
+                    transitionDelay: `${i + 3}00ms`,
+                  }}
+                  className={`text-slate-400 whitespace-pre duration-500 ${
+                    !open && "opacity-0 translate-x-28 overflow-hidden"
+                  }`}
+                >
+                  {menu?.name}
+                </h2>
+              </button>
+            ) : (
+              <Link
+                to={menu?.link}
+                key={i}
+                className={`${
+                  menu?.margin && "mt-5"
+                } group flex items-center text-sm gap-3.5 font-medium pt-2 pb-2 hover:bg-gray-300 rounded-md dark:hover:bg-gray-800`}
+              >
+                <div>
+                  {React.createElement(menu?.icon, {
+                    size: "20",
+                    color: dark ? "#000" : "#FFF",
+                  })}
+                </div>
+                <h2
+                  style={{
+                    transitionDelay: `${i + 3}00ms`,
+                  }}
+                  className={`text-black dark:text-white whitespace-pre duration-500 ${
+                    !open && "opacity-0 translate-x-28 overflow-hidden"
+                  }`}
+                >
+                  {menu?.name}
+                </h2>
+              </Link>
+            )}
+          </>
         ))}
       </div>
       <div className="mt-auto">
