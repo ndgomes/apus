@@ -38,14 +38,15 @@ export function SideBar() {
       </div>
       <div className="mt-4 flex flex-col gap-4 relative">
         {sideBarMenu?.map((menu, i) => (
-          <>
+          <span key={i}>
             {menu?.disable ? (
               <button
+                key={i}
+                title="Coming Soon"
                 className={`${
                   menu?.margin && "mt-5"
                 } group flex items-center text-sm gap-3.5 font-medium pt-2 pb-2`}
                 disabled
-                title="Coming Soon"
               >
                 <div>
                   {React.createElement(menu?.icon, {
@@ -90,7 +91,7 @@ export function SideBar() {
                 </h2>
               </Link>
             )}
-          </>
+          </span>
         ))}
       </div>
       <div className="mt-auto">
