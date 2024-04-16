@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Power, CircleUser, ChevronRight, ChevronLeft } from "lucide-react";
 import { useState } from "react";
-import { sideBarMenu } from "../../constants/dashboard";
+import { sideBarMenu } from "../constants/dashboard";
 import { Link } from "react-router-dom";
-import apusLogo from "../../assets/apusLogo.png";
-import { AuthContext } from "../../context/authContext";
+import apusLogo from "../assets/apusLogo.png";
+import { AuthContext } from "../context/authContext";
 import { Moon, Sun } from "lucide-react";
 
 export function SideBar() {
@@ -121,7 +121,10 @@ export function SideBar() {
             <CircleUser
               className={`${open && "mr-2"}`}
               color={dark ? "#000" : "#FFF"}
-              size={22}
+              style={{
+                transitionDelay: `300ms`,
+              }}
+              size={open ? 22 : 0}
             />
             <h4
               style={{
