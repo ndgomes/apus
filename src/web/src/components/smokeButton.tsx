@@ -29,7 +29,7 @@ export function SmokeButton(props: SmokeButtonProps) {
           Smoke
         </text>
       </svg>
-      <div className="text-center text-white">
+      <div className="text-center text-black dark:text-white">
         <h2 className="font-semibold">You can smoke since:</h2>
         <h1 className="text-purple-500 mt-2">{props.timeToNextCigarette}</h1>
       </div>

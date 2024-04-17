@@ -19,7 +19,7 @@ export function SideBar() {
 
   return (
     <div
-      className={`bg-gray-200 dark:bg-gray-900 h-[calc(100dvh)] flex flex-col ${
+      className={`bg-gray-200 dark:bg-gray-900 h-[calc(100dvh)] self-start sticky top-0 flex flex-col overflow-y-hidden ${
         open ? "w-72" : "w-16"
       } duration-500 text-gray-100 px-4`}
     >
