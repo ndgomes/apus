@@ -11,6 +11,10 @@ export const DashboardPage: React.FC = () => {
     getConfiguration(authToken);
   });
 
+  const handleOnClickSmoke = () => {
+    console.log("oila");
+  };
+
   return (
     <div className="flex">
       <SideBar />
@@ -18,14 +22,15 @@ export const DashboardPage: React.FC = () => {
         <div className="mt-3">
           <ProgressCards
             phaseLevel="5"
-            phaseReduction="80"
+            phaseCompleted="80%"
             savedCigarettes="25"
+            savedMoney="1 500,56 €"
           />
         </div>
 
         <div className="flex flex-col md:flex-row">
           <SmokeButton
-            onClickSmoke={() => console.log("ola")}
+            onClickSmoke={handleOnClickSmoke}
             timeToNextCigarette="00:51:56:28"
           />
 
