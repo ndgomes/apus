@@ -8,7 +8,7 @@ import { AuthContext } from "../context/authContext";
 import { Moon, Sun } from "lucide-react";
 
 export function SideBar() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const { callLogout, userConfig } = useContext(AuthContext);
 
@@ -19,7 +19,7 @@ export function SideBar() {
 
   return (
     <div
-      className={`bg-gray-200 dark:bg-gray-900 h-[calc(100dvh)] self-start sticky top-0 flex flex-col overflow-y-hidden ${
+      className={`bg-gray-200 dark:bg-gray-900 h-screen self-start sticky top-0 flex flex-col overflow-y-hidden ${
         open ? "w-72" : "w-16"
       } duration-500 text-gray-100 px-4`}
     >
