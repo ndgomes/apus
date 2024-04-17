@@ -29,9 +29,9 @@ async def register_quiz(
     # Create and save user quiz
     quiz = Quiz(
         user_id=current_user.id,
-        cigarretes_per_day=profile_data.cigarettes_per_day,
+        cigarettes_per_day=profile_data.cigarettes_per_day,
         price_per_package=profile_data.price_per_package,
-        cigarretes_per_package=profile_data.cigarettes_per_package
+        cigarettes_per_package=profile_data.cigarettes_per_package
     )
     db.add(quiz)
     db.commit()
@@ -59,9 +59,9 @@ async def update_quiz(
         raise HTTPException(status_code=404, detail="User quiz not found")
 
     # Update user quiz with new data
-    quiz.cigarretes_per_day = profile_data.cigarettes_per_day
+    quiz.cigarettes_per_day = profile_data.cigarettes_per_day
     quiz.price_per_package = profile_data.price_per_package
-    quiz.cigarretes_per_package = profile_data.cigarettes_per_package
+    quiz.cigarettes_per_package = profile_data.cigarettes_per_package
 
     # Save the updated profile
     db.commit()

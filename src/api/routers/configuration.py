@@ -24,8 +24,8 @@ class QuizResponse(BaseModel):
 
 
 class SmokeLogResponse(BaseModel):
-    smoking_time: Optional[datetime]
-    next_cigarrete: Optional[datetime]
+    last_cigarette: Optional[datetime]
+    next_cigarette: Optional[datetime]
 
 
 class ConfigurationResponse(BaseModel):
@@ -43,7 +43,7 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
     quiz = db.query(Quiz).filter(Quiz.user_id == current_user.id).first()
 
     smoke_log = db.query(UserActivityLog).filter(
-        UserActivityLog.user_id == current_user.id).order_by(desc(UserActivityLog.smoking_time)).first()
+        UserActivityLog.user_id == current_user.id).order_by(desc(UserActivityLog.last_cigarette)).first()
 
     user_response = UserResponse(
         username=user.username,
@@ -58,7 +58,7 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
         cigarettes_per_package=getattr(quiz, "cigarettes_per_package", None)
     )
 
-    smoke_log_response = SmokeLogResponse(smoking_time=getattr(smoke_log, "smoking_time", None),
-                                          next_cigarrete=getattr(smoke_log, "next_cigarrete", None))
+    smoke_log_response = SmokeLogResponse(last_cigarette=getattr(smoke_log, "last_cigarette", None),
+                                          next_cigarette=getattr(smoke_log, "next_cigarette", None))
 
     return ConfigurationResponse(config={"user": user_response.dict(), "quiz": quiz_response.dict(), "smoke_log": smoke_log_response.dict()})

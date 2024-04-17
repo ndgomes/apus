@@ -12,11 +12,15 @@ router = APIRouter()
 
 # Pydantic model for user quiz registration request body
 class SmokeBaseModel(BaseModel):
-    smoking_time: datetime
+    last_cigarette: datetime
+
+
+class SmokeResponse(BaseModel):
+    next_cigarette: datetime
 
 
 # Endpoint for registering smoke
-@router.post("/smoke")
+@router.post("/smoke", response_model=SmokeResponse)
 async def register_smoke(
     smoke_data: SmokeBaseModel,
     current_user: User = Depends(get_current_user),
@@ -25,16 +29,16 @@ async def register_smoke(
     if not current_user:
         raise HTTPException(status_code=401, detail="User not authenticated")
 
-    next_cigarrete = smoke_data.smoking_time + timedelta(hours=1)
+    next_cigarette = smoke_data.last_cigarette + timedelta(hours=1)
 
     # Create and save smoke log
     smoke_log = UserActivityLog(
         user_id=current_user.id,
-        smoking_time=smoke_data.smoking_time,
-        next_cigarrete=next_cigarrete
+        last_cigarette=smoke_data.last_cigarette,
+        next_cigarette=next_cigarette
     )
 
     db.add(smoke_log)
     db.commit()
 
-    return {"message": "Smoke log created successfully"}
+    return {"message": "Smoke log created successfully", "next_cigarette": next_cigarette}
