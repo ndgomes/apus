@@ -1,5 +1,8 @@
+import { Loading } from "./loading";
+
 interface SmokeButtonProps {
   timeToNextCigarette: string;
+  isLoading: boolean;
   onClickSmoke: () => void;
 }
 
@@ -16,7 +19,11 @@ export function SmokeButton(props: SmokeButtonProps) {
       </button>
       <div className="text-center text-black dark:text-white mt-8">
         <h2 className="font-semibold">You can smoke since:</h2>
-        <h1 className="text-purple-500 mt-2">{props.timeToNextCigarette}</h1>
+        {props.isLoading || props.timeToNextCigarette === "0:0:0:0" ? (
+          <Loading />
+        ) : (
+          <h1 className="text-purple-500 mt-2">{props.timeToNextCigarette}</h1>
+        )}
       </div>
     </div>
   );

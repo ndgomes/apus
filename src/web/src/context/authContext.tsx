@@ -10,8 +10,8 @@ export interface userConfigurationResponse {
     cigarettes_per_package: number | null;
   };
   smoke_log: {
-    smoking_time: Date | null;
-    next_cigarrete: Date | null;
+    last_cigarette: Date | null;
+    next_cigarette: Date | null;
   };
   user: {
     username: string;
