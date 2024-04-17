@@ -19,12 +19,8 @@ export const DashboardPage: React.FC = () => {
   const { authToken, getConfiguration, userConfig } = useContext(AuthContext);
   const [loadingState, setLoadingState] = useState<boolean>(false);
 
-  const [cigaretteTime, setCigaretteTime] = useState<Date | null | undefined>(
-    userConfig?.smoke_log.next_cigarette
-  );
-
   const [nextCigaretteFormatted, setNextCigaretteFormatted] =
-    useState<string>("0:0:0:0");
+    useState<string>("");
 
   let interval: number;
 
@@ -33,10 +29,33 @@ export const DashboardPage: React.FC = () => {
     getConfiguration(authToken);
   });
 
+  const handleOnClickSmoke = () => {
+    setLoadingState(true);
+
+    axios
+      .post(
+        "https://api.apu-s.space/smoke",
+        {
+          last_cigarette: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+        },
+        { headers: { token: authToken } }
+      )
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        getConfiguration();
+        setLoadingState(false);
+      });
+  };
+
   const updateCountdown = () => {
-    const diffDuration = dayjs(cigaretteTime).diff(dayjs());
+    const diffDuration = dayjs(userConfig?.smoke_log.next_cigarette).diff(
+      dayjs()
+    );
 
     if (diffDuration <= 0) {
+      setNextCigaretteFormatted("0:0:0:0");
       clearInterval(interval);
     }
 
@@ -51,29 +70,6 @@ export const DashboardPage: React.FC = () => {
     interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
-  };
-
-  const handleOnClickSmoke = () => {
-    setLoadingState(true);
-
-    axios
-      .post(
-        "https://api.apu-s.space/smoke",
-        {
-          last_cigarette: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
-        },
-        { headers: { token: authToken } }
-      )
-      .then((response) => {
-        setCigaretteTime(response.data.last_cigarette);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        getConfiguration();
-        cigaretteTime && setLoadingState(false);
-      });
   };
 
   useEffect(() => {
