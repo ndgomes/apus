@@ -14,7 +14,8 @@ router = APIRouter()
 class UserResponse(BaseModel):
     username: str
     email: str
-    created_at: str
+    is_first_time: bool
+    created_at: datetime
 
 
 class QuizResponse(BaseModel):
@@ -58,7 +59,7 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
         username=user.username,
         email=user.email,
         is_first_time=user.is_first_time,
-        created_at=str(user.created_at)
+        created_at=user.created_at
     )
 
     quiz_response = QuizResponse(
