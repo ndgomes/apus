@@ -12,7 +12,7 @@ export function SmokeButton(props: SmokeButtonProps) {
           cy="50"
           r="calc(min(45%, 45vw))"
           fill="#a855f7"
-          onClick={() => props.onClickSmoke}
+          onClick={props.onClickSmoke}
           cursor="pointer"
         />
         <text
@@ -23,6 +23,8 @@ export function SmokeButton(props: SmokeButtonProps) {
           font-size="16"
           dy=".3em"
           className="font-semibold"
+          onClick={props.onClickSmoke}
+          cursor="pointer"
         >
           Smoke
         </text>
