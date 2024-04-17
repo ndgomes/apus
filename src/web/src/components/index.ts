@@ -8,3 +8,4 @@ export * from "./loading";
 export * from "./quiz";
 export * from "./sidebar";
 export * from "./progressCards";
+export * from "./smokeButton";
