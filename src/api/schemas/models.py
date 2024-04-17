@@ -29,9 +29,9 @@ class Quiz(Base):
     __tablename__ = 'quiz'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'), unique=True)
-    cigarretes_per_day = Column(Integer)
+    cigarettes_per_day = Column(Integer)
     price_per_package = Column(Float)
-    cigarretes_per_package = Column(Integer)
+    cigarettes_per_package = Column(Integer)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, onupdate=datetime.now)
 
@@ -42,8 +42,8 @@ class UserActivityLog(Base):
     __tablename__ = 'user_activity_logs'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    smoking_time = Column(DateTime, default=datetime.now)
-    next_cigarrete = Column(DateTime)
+    last_cigarette = Column(DateTime, default=datetime.now)
+    next_cigarette = Column(DateTime)
 
     user = relationship("User", back_populates="activity_logs")
 
