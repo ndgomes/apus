@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Header, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
-from typing import Optional
+from sqlalchemy import desc, func, Date
+from typing import Optional, List
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 from dependencies import get_db, get_current_user
 from schemas.models import User, Quiz, UserActivityLog
@@ -38,9 +38,18 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
     if not current_user:
         raise HTTPException(status_code=401, detail="User not authenticated")
 
+    # Dates validation
+
+    today = date.today()
+
     # Query user profile information
     user = db.query(User).filter(User.id == current_user.id).first()
     quiz = db.query(Quiz).filter(Quiz.user_id == current_user.id).first()
+    history = db.query(UserActivityLog).filter(
+        UserActivityLog.user_id == current_user.id, func.date(UserActivityLog.last_cigarette, type_=Date) >= today).filter(
+        func.date(UserActivityLog.last_cigarette,
+                  type_=Date) < today + timedelta(days=1)
+    ).all()
 
     smoke_log = db.query(UserActivityLog).filter(
         UserActivityLog.user_id == current_user.id).order_by(desc(UserActivityLog.last_cigarette)).first()
@@ -61,4 +70,6 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
     smoke_log_response = SmokeLogResponse(last_cigarette=getattr(smoke_log, "last_cigarette", None),
                                           next_cigarette=getattr(smoke_log, "next_cigarette", None))
 
-    return ConfigurationResponse(config={"user": user_response.dict(), "quiz": quiz_response.dict(), "smoke_log": smoke_log_response.dict()})
+    history = [activity.last_cigarette for activity in history]
+
+    return ConfigurationResponse(config={"user": user_response.dict(), "quiz": quiz_response.dict(), "smoke_log": smoke_log_response.dict(), "history": history})
