@@ -13,6 +13,7 @@ export function SignupPage() {
   const [validationPatternState, setValidationsPatternState] = useState<
     string[]
   >([]);
+  const [error, setError] = useState();
 
   const validationPasswordPattern = (password: string) => {
     const validations: string[] = [];
@@ -78,6 +79,10 @@ export function SignupPage() {
     }
   };
 
+  const handleOnFocus = () => {
+    setError(undefined);
+  };
+
   const handleOnSubmit = (event: React.FormEvent) => {
     if (validationPatternState.length === 5) {
       event.preventDefault();
@@ -91,10 +96,13 @@ export function SignupPage() {
         })
         .then((response) => {
           console.log(response);
+          setError(undefined);
+          setValidationsPatternState([]);
           navigate("/");
         })
         .catch((error) => {
-          console.log(error.message);
+          setError(error.response.data.detail);
+          setValidationsPatternState([]);
         })
         .finally(() => {
           setLoadingState(false);
@@ -116,7 +124,9 @@ export function SignupPage() {
           <Signup
             onSubmit={handleOnSubmit}
             onChange={handleOnChange}
+            onFocus={handleOnFocus}
             passwordValidationsState={validationPatternState}
+            isError={error}
           />
         )}
       </div>

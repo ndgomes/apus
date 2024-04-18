@@ -2,13 +2,10 @@ import { Header, Login } from "../components";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 export function LoginPage() {
-  let navigate = useNavigate();
-
-  const { setAuthToken, setUser } = useContext(AuthContext);
+  const { setAuthToken, setUser, getConfiguration } = useContext(AuthContext);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -38,11 +35,10 @@ export function LoginPage() {
         })
         .then((response) => {
           const token = response.data.access_token;
-
           setAuthToken(token);
           setUser(jwtDecode(token));
           localStorage.setItem("authToken", JSON.stringify(token));
-          navigate("/dashboard");
+          getConfiguration(token);
         })
         .catch((error) => {
           console.log(error.message);

@@ -4,3 +4,8 @@ export * from "./signup";
 export * from "./input";
 export * from "./formExtra";
 export * from "./formAction";
+export * from "./loading";
+export * from "./quiz";
+export * from "./sidebar";
+export * from "./progressCards";
+export * from "./smokeButton";

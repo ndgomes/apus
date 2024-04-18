@@ -1,6 +1,25 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+export interface userConfigurationResponse {
+  quiz: {
+    cigarettes_per_day: number | null;
+    price_per_package: number | null;
+    cigarettes_per_package: number | null;
+  };
+  smoke_log: {
+    last_cigarette: Date | null;
+    next_cigarette: Date | null;
+  };
+  user: {
+    username: string;
+    email: string;
+    password: string;
+    is_first_time: boolean;
+  };
+}
 
 interface CurrentUserContextType {
   authToken: string | undefined;
@@ -9,10 +28,10 @@ interface CurrentUserContextType {
   user: string | undefined;
   setUser: React.Dispatch<React.SetStateAction<string | undefined>>;
 
-  signupWarning: boolean;
-  setSignupWarning: React.Dispatch<React.SetStateAction<boolean>>;
+  userConfig: userConfigurationResponse | undefined;
 
   callLogout: () => void;
+  getConfiguration: (authTokenProp?: string) => void;
 }
 
 interface Props {
@@ -24,6 +43,8 @@ export const AuthContext = createContext<CurrentUserContextType>(
 );
 
 export const AuthProvider: React.FC<Props> = ({ children }) => {
+  let navigate = useNavigate();
+
   let [authToken, setAuthToken] = useState<string | undefined>(() =>
     localStorage.getItem("authToken")
       ? JSON.parse(localStorage.getItem("authToken") || "")
@@ -36,7 +57,9 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       : undefined
   );
 
-  let [signupWarning, setSignupWarning] = useState<boolean>(false);
+  const [userConfig, setUserConfig] = useState<
+    userConfigurationResponse | undefined
+  >();
 
   //Call logout
   function callLogout() {
@@ -52,7 +75,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         localStorage.removeItem("authToken");
       })
       .catch(function (error) {
-        console.log(error);
+        console.log("logout error: ", error);
         setAuthToken(undefined);
         setUser(undefined);
         localStorage.removeItem("authToken");
@@ -94,6 +117,24 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     return () => clearInterval(interval);
   }, [authToken]);
 
+  function getConfiguration(authTokenProp?: string) {
+    axios
+      .get("https://api.apu-s.space/configuration", {
+        headers: {
+          token: authTokenProp ? authTokenProp : authToken,
+        },
+      })
+      .then((response) => {
+        setUserConfig(response.data.config);
+        response.data.config.user.is_first_time
+          ? navigate("/quiz")
+          : navigate("/dashboard");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -102,8 +143,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         setUser,
         authToken,
         callLogout,
-        signupWarning,
-        setSignupWarning,
+        userConfig,
+        getConfiguration,
       }}
     >
       {children}

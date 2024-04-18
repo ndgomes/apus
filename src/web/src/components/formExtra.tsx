@@ -1,3 +1,6 @@
+import { CircleX } from "lucide-react";
+import { Link } from "react-router-dom";
+
 interface FormExtraProps {
   error: boolean;
 }
@@ -6,10 +9,12 @@ export function FormExtra(props: FormExtraProps) {
   return (
     <>
       {props.error && (
-        <div>
-          <span className="text-red-500">Email or Password invalid</span>
-        </div>
+        <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+          <CircleX height={15} width={15} color="red" />
+          Email or Password invalid
+        </span>
       )}
+
       <div className="flex items-center justify-between ">
         <div className="flex items-center">
           <input
@@ -27,12 +32,12 @@ export function FormExtra(props: FormExtraProps) {
         </div>
 
         <div className="text-sm">
-          <a
-            href="#"
+          <Link
+            to={"/forgot-password"}
             className="font-medium text-purple-600 hover:text-purple-500"
           >
             Forgot your password?
-          </a>
+          </Link>
         </div>
       </div>
     </>
