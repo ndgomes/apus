@@ -10,19 +10,18 @@ import { ProgressCards, SideBar, SmokeButton } from "../components";
 import { useDidMount } from "../hooks";
 import { AuthContext } from "../context/authContext";
 
-export const DashboardPage: React.FC = () => {
-  dayjs.extend(utc);
-  dayjs.extend(timezone);
-  dayjs.extend(duration);
-  dayjs.tz.setDefault("Europe/London");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(duration);
+dayjs.tz.setDefault("Europe/London");
 
+export const DashboardPage: React.FC = () => {
   const { authToken, getConfiguration, userConfig } = useContext(AuthContext);
   const [loadingState, setLoadingState] = useState<boolean>(false);
-
   const [nextCigaretteFormatted, setNextCigaretteFormatted] =
-    useState<string>("");
+    useState<string>("0:0:0:0");
 
-  let interval: number;
+  let interval: number | null = null;
 
   useDidMount(() => {
     window.scrollTo(0, 0);
@@ -40,11 +39,15 @@ export const DashboardPage: React.FC = () => {
         },
         { headers: { token: authToken } }
       )
+      .then(() => {
+        clearInterval(interval!);
+        getConfiguration();
+      })
       .catch((error) => {
         console.log(error);
       })
       .finally(() => {
-        getConfiguration();
+        updateCountdown();
         setLoadingState(false);
       });
   };
@@ -56,7 +59,7 @@ export const DashboardPage: React.FC = () => {
 
     if (diffDuration <= 0) {
       setNextCigaretteFormatted("0:0:0:0");
-      clearInterval(interval);
+      return;
     }
 
     setNextCigaretteFormatted(
@@ -68,13 +71,17 @@ export const DashboardPage: React.FC = () => {
     );
 
     interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
   };
 
   useEffect(() => {
     updateCountdown();
-  }, []);
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [userConfig?.smoke_log]);
 
   return (
     <div className="flex">
