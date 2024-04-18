@@ -68,8 +68,8 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
         cigarettes_per_package=getattr(quiz, "cigarettes_per_package", None)
     )
 
-    smoke_log_response = SmokeLogResponse(last_cigarette=getattr(smoke_log, "last_cigarette", None),
-                                          next_cigarette=getattr(smoke_log, "next_cigarette", None))
+    smoke_log_response = SmokeLogResponse(last_cigarette=getattr(
+        smoke_log, "last_cigarette", None), next_cigarette=getattr(smoke_log, "next_cigarette", None))
 
     history = [activity.last_cigarette for activity in history]
 
