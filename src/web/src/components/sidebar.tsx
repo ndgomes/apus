@@ -8,7 +8,7 @@ import { AuthContext } from "../context/authContext";
 import { Moon, Sun } from "lucide-react";
 
 export function SideBar() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const { callLogout, userConfig } = useContext(AuthContext);
 

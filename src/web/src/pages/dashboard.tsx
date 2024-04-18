@@ -10,48 +10,23 @@ import { ProgressCards, SideBar, SmokeButton } from "../components";
 import { useDidMount } from "../hooks";
 import { AuthContext } from "../context/authContext";
 
-export const DashboardPage: React.FC = () => {
-  dayjs.extend(utc);
-  dayjs.extend(timezone);
-  dayjs.extend(duration);
-  dayjs.tz.setDefault("Europe/London");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(duration);
+dayjs.tz.setDefault("Europe/London");
 
+export const DashboardPage: React.FC = () => {
   const { authToken, getConfiguration, userConfig } = useContext(AuthContext);
   const [loadingState, setLoadingState] = useState<boolean>(false);
-
-  const [cigaretteTime, setCigaretteTime] = useState<Date | null | undefined>(
-    userConfig?.smoke_log.next_cigarette
-  );
-
   const [nextCigaretteFormatted, setNextCigaretteFormatted] =
     useState<string>("0:0:0:0");
 
-  let interval: number;
+  let interval: number | null = null;
 
   useDidMount(() => {
     window.scrollTo(0, 0);
     getConfiguration(authToken);
   });
-
-  const updateCountdown = () => {
-    const diffDuration = dayjs(cigaretteTime).diff(dayjs());
-
-    if (diffDuration <= 0) {
-      clearInterval(interval);
-    }
-
-    setNextCigaretteFormatted(
-      `${Math.floor(diffDuration / (1000 * 60 * 60 * 24))}:${Math.floor(
-        (diffDuration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      )}:${Math.floor(
-        (diffDuration % (1000 * 60 * 60)) / (1000 * 60)
-      )}:${Math.floor((diffDuration % (1000 * 60)) / 1000)}`
-    );
-
-    interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
-  };
 
   const handleOnClickSmoke = () => {
     setLoadingState(true);
@@ -64,21 +39,49 @@ export const DashboardPage: React.FC = () => {
         },
         { headers: { token: authToken } }
       )
-      .then((response) => {
-        setCigaretteTime(response.data.last_cigarette);
+      .then(() => {
+        clearInterval(interval!);
+        getConfiguration();
       })
       .catch((error) => {
         console.log(error);
       })
       .finally(() => {
-        getConfiguration();
-        cigaretteTime && setLoadingState(false);
+        updateCountdown();
+        setLoadingState(false);
       });
+  };
+
+  const updateCountdown = () => {
+    const diffDuration = dayjs(userConfig?.smoke_log.next_cigarette).diff(
+      dayjs()
+    );
+
+    if (diffDuration <= 0) {
+      setNextCigaretteFormatted("0:0:0:0");
+      return;
+    }
+
+    setNextCigaretteFormatted(
+      `${Math.floor(diffDuration / (1000 * 60 * 60 * 24))}:${Math.floor(
+        (diffDuration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      )}:${Math.floor(
+        (diffDuration % (1000 * 60 * 60)) / (1000 * 60)
+      )}:${Math.floor((diffDuration % (1000 * 60)) / 1000)}`
+    );
+
+    interval = setInterval(updateCountdown, 1000);
   };
 
   useEffect(() => {
     updateCountdown();
-  }, []);
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [userConfig?.smoke_log]);
 
   return (
     <div className="flex">
