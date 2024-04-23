@@ -18,70 +18,87 @@ dayjs.tz.setDefault("Europe/London");
 export const DashboardPage: React.FC = () => {
   const { authToken, getConfiguration, userConfig } = useContext(AuthContext);
   const [loadingState, setLoadingState] = useState<boolean>(false);
-  const [nextCigaretteFormatted, setNextCigaretteFormatted] =
-    useState<string>("0:0:0:0");
 
-  let interval: number | null = null;
+  const [countdownFormatted, setCountdownFormatted] = useState<string>("");
+
+  const [lastCigaretteState, setLastCigaretteState] = useState<
+    Date | undefined
+  >(undefined);
+  const [nextCigaretteState, setNextCigaretteState] = useState<
+    Date | undefined
+  >(undefined);
+
+  const addHours = (date: Date, hours: number) => {
+    let dateCopy = new Date(date.getTime());
+    const hoursToAdd = hours * 60 * 60 * 1000;
+    dateCopy.setTime(date.getTime() + hoursToAdd);
+    return dateCopy;
+  };
 
   useDidMount(() => {
     window.scrollTo(0, 0);
     getConfiguration(authToken);
+
+    if (userConfig?.smoke_log.last_cigarette) {
+      setLastCigaretteState(new Date(userConfig.smoke_log.last_cigarette));
+    }
+
+    if (userConfig?.smoke_log.next_cigarette) {
+      setNextCigaretteState(new Date(userConfig.smoke_log.next_cigarette));
+    }
   });
+
+  useEffect(() => {
+    if (lastCigaretteState) {
+      const intervalId = setInterval(() => {
+        const currentTime = new Date().getTime();
+        const timeBetween = nextCigaretteState!.getTime() - currentTime;
+
+        if (timeBetween <= 0) {
+          clearInterval(intervalId);
+          setCountdownFormatted("Countdown Ended");
+        } else {
+          const days = Math.floor(timeBetween / (1000 * 60 * 60 * 24));
+          const hours = Math.floor(
+            (timeBetween % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const minutes = Math.floor(
+            (timeBetween % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((timeBetween % (1000 * 60)) / 1000);
+
+          setCountdownFormatted(`${days}:${hours}:${minutes}:${seconds}`);
+        }
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [lastCigaretteState]);
 
   const handleOnClickSmoke = () => {
     setLoadingState(true);
+
+    const currentDate = new Date();
+    setLastCigaretteState(currentDate);
+    setNextCigaretteState(addHours(currentDate, 1));
 
     axios
       .post(
         "https://api.apu-s.space/smoke",
         {
-          last_cigarette: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+          last_cigarette: dayjs(currentDate).format(
+            "YYYY-MM-DDTHH:mm:ss.SSS[Z]"
+          ),
         },
         { headers: { token: authToken } }
       )
-      .then(() => {
-        clearInterval(interval!);
-        getConfiguration();
-      })
       .catch((error) => {
         console.log(error);
       })
       .finally(() => {
-        updateCountdown();
         setLoadingState(false);
       });
   };
-
-  const updateCountdown = () => {
-    const diffDuration = dayjs(userConfig?.smoke_log.next_cigarette).diff(
-      dayjs()
-    );
-
-    if (diffDuration <= 0) {
-      setNextCigaretteFormatted("0:0:0:0");
-      return;
-    }
-
-    setNextCigaretteFormatted(
-      `${Math.floor(diffDuration / (1000 * 60 * 60 * 24))}:${Math.floor(
-        (diffDuration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      )}:${Math.floor(
-        (diffDuration % (1000 * 60 * 60)) / (1000 * 60)
-      )}:${Math.floor((diffDuration % (1000 * 60)) / 1000)}`
-    );
-
-    interval = setInterval(updateCountdown, 1000);
-  };
-
-  useEffect(() => {
-    updateCountdown();
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [userConfig?.smoke_log]);
 
   return (
     <div className="flex">
@@ -99,7 +116,7 @@ export const DashboardPage: React.FC = () => {
         <div className="flex flex-col md:flex-row">
           <SmokeButton
             onClickSmoke={handleOnClickSmoke}
-            timeToNextCigarette={nextCigaretteFormatted}
+            timeToNextCigarette={countdownFormatted}
             isLoading={loadingState}
           />
 
