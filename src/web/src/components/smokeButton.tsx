@@ -19,7 +19,7 @@ export function SmokeButton(props: SmokeButtonProps) {
       </button>
       <div className="text-center text-black dark:text-white mt-8">
         <h2 className="font-semibold">You can smoke since:</h2>
-        {props.isLoading || props.timeToNextCigarette === "0:0:0:0" ? (
+        {props.isLoading || props.timeToNextCigarette === "" ? (
           <Loading />
         ) : (
           <h1 className="text-purple-500 mt-2">{props.timeToNextCigarette}</h1>
