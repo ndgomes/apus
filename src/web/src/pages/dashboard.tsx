@@ -26,19 +26,20 @@ export const DashboardPage: React.FC = () => {
 
   const [countdownFormatted, setCountdownFormatted] = useState<string>("");
 
+  const userConfig: userConfigurationResponse = localStorage.getItem(
+    "userConfig"
+  )
+    ? JSON.parse(localStorage.getItem("userConfig") || "")
+    : undefined;
+
   const [lastCigaretteState, setLastCigaretteState] = useState<
     Date | undefined
   >(undefined);
   const [nextCigaretteState, setNextCigaretteState] = useState<
     Date | undefined
   >(undefined);
-  const [historyData, setHistoryData] = useState<Date[] | undefined>(undefined);
 
-  const userConfig: userConfigurationResponse = localStorage.getItem(
-    "userConfig"
-  )
-    ? JSON.parse(localStorage.getItem("userConfig") || "")
-    : undefined;
+  const [historyData, setHistoryData] = useState<Date[] | undefined>([]);
 
   const addHours = (date: Date, hours: number) => {
     let dateCopy = new Date(date.getTime());
@@ -111,10 +112,7 @@ export const DashboardPage: React.FC = () => {
         },
         { headers: { token: authToken } }
       )
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
+      .then(() => {
         if (historyData !== undefined) {
           const newHistoryData = [...historyData];
 
@@ -124,6 +122,8 @@ export const DashboardPage: React.FC = () => {
 
           setHistoryData(newHistoryData);
         }
+      })
+      .finally(() => {
         setLoadingState(false);
       });
   };
