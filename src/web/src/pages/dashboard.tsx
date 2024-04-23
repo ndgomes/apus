@@ -21,7 +21,7 @@ dayjs.extend(duration);
 dayjs.tz.setDefault("Europe/London");
 
 export const DashboardPage: React.FC = () => {
-  const { authToken, getConfiguration, userConfig } = useContext(AuthContext);
+  const { authToken, userConfig } = useContext(AuthContext);
   const [loadingState, setLoadingState] = useState<boolean>(false);
 
   const [countdownFormatted, setCountdownFormatted] = useState<string>("");
@@ -33,6 +33,8 @@ export const DashboardPage: React.FC = () => {
     Date | undefined
   >(undefined);
 
+  const [historyData, setHistoryData] = useState<Date[] | undefined>(undefined);
+
   const addHours = (date: Date, hours: number) => {
     let dateCopy = new Date(date.getTime());
     const hoursToAdd = hours * 60 * 60 * 1000;
@@ -42,7 +44,6 @@ export const DashboardPage: React.FC = () => {
 
   useDidMount(() => {
     window.scrollTo(0, 0);
-    getConfiguration(authToken);
 
     if (userConfig?.smoke_log.last_cigarette) {
       setLastCigaretteState(new Date(userConfig.smoke_log.last_cigarette));
@@ -50,6 +51,10 @@ export const DashboardPage: React.FC = () => {
 
     if (userConfig?.smoke_log.next_cigarette) {
       setNextCigaretteState(new Date(userConfig.smoke_log.next_cigarette));
+    }
+
+    if (userConfig?.history) {
+      setHistoryData(userConfig.history);
     }
   });
 
@@ -104,6 +109,15 @@ export const DashboardPage: React.FC = () => {
         console.log(error);
       })
       .finally(() => {
+        if (historyData !== undefined) {
+          const newHistoryData = [...historyData];
+
+          newHistoryData.push(
+            new Date(dayjs(currentDate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"))
+          );
+
+          setHistoryData(newHistoryData);
+        }
         setLoadingState(false);
       });
   };
@@ -128,7 +142,7 @@ export const DashboardPage: React.FC = () => {
             isLoading={loadingState}
           />
 
-          <HistoryTable cigarettesHistory={userConfig?.history} />
+          <HistoryTable cigarettesHistory={historyData} />
         </div>
       </div>
     </div>
