@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export interface userConfigurationResponse {
+  history: Date[];
   quiz: {
     cigarettes_per_day: number | null;
     price_per_package: number | null;

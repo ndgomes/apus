@@ -9,3 +9,4 @@ export * from "./quiz";
 export * from "./sidebar";
 export * from "./progressCards";
 export * from "./smokeButton";
+export * from "./historyTable";

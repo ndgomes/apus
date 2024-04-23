@@ -6,7 +6,12 @@ import timezone from "dayjs/plugin/timezone";
 import duration from "dayjs/plugin/duration";
 
 import React, { useContext, useEffect, useState } from "react";
-import { ProgressCards, SideBar, SmokeButton } from "../components";
+import {
+  HistoryTable,
+  ProgressCards,
+  SideBar,
+  SmokeButton,
+} from "../components";
 import { useDidMount } from "../hooks";
 import { AuthContext } from "../context/authContext";
 
@@ -123,9 +128,7 @@ export const DashboardPage: React.FC = () => {
             isLoading={loadingState}
           />
 
-          <div className="border-4 border-purple-500 rounded-lg h-[28rem] md:h-[38rem] lg:h-[42rem] p-4 md:w-2/3 my-4 mx-4 md:mr-4 lg:mr-8">
-            <p>History</p>
-          </div>
+          <HistoryTable cigarettesHistory={userConfig?.history} />
         </div>
       </div>
     </div>
