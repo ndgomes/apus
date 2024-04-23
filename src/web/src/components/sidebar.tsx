@@ -4,13 +4,20 @@ import { useState } from "react";
 import { sideBarMenu } from "../constants/dashboard";
 import { Link } from "react-router-dom";
 import apusLogo from "../assets/apusLogo.png";
-import { AuthContext } from "../context/authContext";
+import { AuthContext, userConfigurationResponse } from "../context/authContext";
 import { Moon, Sun } from "lucide-react";
 
 export function SideBar() {
+  const { callLogout } = useContext(AuthContext);
+
+  const userConfig: userConfigurationResponse = localStorage.getItem(
+    "userConfig"
+  )
+    ? JSON.parse(localStorage.getItem("userConfig") || "")
+    : undefined;
+
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
-  const { callLogout, userConfig } = useContext(AuthContext);
 
   const darkModeHandler = () => {
     setDark(!dark);
