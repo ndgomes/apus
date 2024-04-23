@@ -29,8 +29,6 @@ interface CurrentUserContextType {
   user: string | undefined;
   setUser: React.Dispatch<React.SetStateAction<string | undefined>>;
 
-  userConfig: userConfigurationResponse | undefined;
-
   callLogout: () => void;
   getConfiguration: (authTokenProp?: string) => void;
 }
@@ -58,10 +56,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       : undefined
   );
 
-  const [userConfig, setUserConfig] = useState<
-    userConfigurationResponse | undefined
-  >();
-
   //Call logout
   function callLogout() {
     axios
@@ -80,6 +74,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         setAuthToken(undefined);
         setUser(undefined);
         localStorage.removeItem("authToken");
+        localStorage.removeItem("userConfig");
       });
   }
 
@@ -126,7 +121,11 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         },
       })
       .then((response) => {
-        setUserConfig(response.data.config);
+        localStorage.setItem(
+          "userConfig",
+          JSON.stringify(response.data.config)
+        );
+
         response.data.config.user.is_first_time
           ? navigate("/quiz")
           : navigate("/dashboard");
@@ -144,7 +143,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         setUser,
         authToken,
         callLogout,
-        userConfig,
         getConfiguration,
       }}
     >
