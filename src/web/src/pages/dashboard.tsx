@@ -67,7 +67,10 @@ export const DashboardPage: React.FC = () => {
           );
           const seconds = Math.floor((timeBetween % (1000 * 60)) / 1000);
 
-          setCountdownFormatted(`${days}:${hours}:${minutes}:${seconds}`);
+          // seconds always have two digits
+          const secondsString = String(seconds).padStart(2, "0");
+
+          setCountdownFormatted(`${days}:${hours}:${minutes}:${secondsString}`);
         }
       }, 1000);
 
