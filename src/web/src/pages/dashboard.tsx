@@ -13,7 +13,7 @@ import {
   SmokeButton,
 } from "../components";
 import { useDidMount } from "../hooks";
-import { AuthContext } from "../context/authContext";
+import { AuthContext, userConfigurationResponse } from "../context/authContext";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -21,7 +21,7 @@ dayjs.extend(duration);
 dayjs.tz.setDefault("Europe/London");
 
 export const DashboardPage: React.FC = () => {
-  const { authToken, userConfig } = useContext(AuthContext);
+  const { authToken, getConfiguration } = useContext(AuthContext);
   const [loadingState, setLoadingState] = useState<boolean>(false);
 
   const [countdownFormatted, setCountdownFormatted] = useState<string>("");
@@ -32,8 +32,13 @@ export const DashboardPage: React.FC = () => {
   const [nextCigaretteState, setNextCigaretteState] = useState<
     Date | undefined
   >(undefined);
-
   const [historyData, setHistoryData] = useState<Date[] | undefined>(undefined);
+
+  const userConfig: userConfigurationResponse = localStorage.getItem(
+    "userConfig"
+  )
+    ? JSON.parse(localStorage.getItem("userConfig") || "")
+    : undefined;
 
   const addHours = (date: Date, hours: number) => {
     let dateCopy = new Date(date.getTime());
@@ -44,6 +49,7 @@ export const DashboardPage: React.FC = () => {
 
   useDidMount(() => {
     window.scrollTo(0, 0);
+    getConfiguration();
 
     if (userConfig?.smoke_log.last_cigarette) {
       setLastCigaretteState(new Date(userConfig.smoke_log.last_cigarette));

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Header, Signup } from "../components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDidMount } from "../hooks";
 
 export function SignupPage() {
   let navigate = useNavigate();
@@ -109,6 +110,11 @@ export function SignupPage() {
         });
     }
   };
+
+  useDidMount(() => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userConfig");
+  });
 
   return (
     <div className="bg-gray-200 dark:bg-gray-900 min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
