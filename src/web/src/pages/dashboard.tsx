@@ -1,10 +1,6 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import duration from "dayjs/plugin/duration";
-
 import React, { useContext, useEffect, useState } from "react";
 import {
   HistoryTable,
@@ -14,11 +10,6 @@ import {
 } from "../components";
 import { useDidMount } from "../hooks";
 import { AuthContext, userConfigurationResponse } from "../context/authContext";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(duration);
-dayjs.tz.setDefault("Europe/London");
 
 export const DashboardPage: React.FC = () => {
   const { authToken, getConfiguration } = useContext(AuthContext);
@@ -116,9 +107,7 @@ export const DashboardPage: React.FC = () => {
         if (historyData !== undefined) {
           const newHistoryData = [...historyData];
 
-          newHistoryData.push(
-            new Date(dayjs(currentDate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"))
-          );
+          newHistoryData.push(new Date(currentDate));
 
           setHistoryData(newHistoryData);
         }
