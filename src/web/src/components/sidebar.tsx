@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Power, CircleUser, ChevronRight, ChevronLeft } from "lucide-react";
 import { useState } from "react";
-import { sideBarMenu } from "../constants/dashboard";
+import { sideBarMenu } from "../constants/sidebar";
 import { Link } from "react-router-dom";
 import apusLogo from "../assets/apusLogo.png";
 import { AuthContext, userConfigurationResponse } from "../context/authContext";
