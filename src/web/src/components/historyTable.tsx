@@ -23,11 +23,18 @@ export function HistoryTable(props: HistoryTableProps) {
     <div className="border-4 border-purple-500 rounded-lg h-[28rem] md:h-[38rem] lg:h-[42rem] p-4 md:w-2/3 my-4 mx-4 md:mr-4 lg:mr-8 overflow-auto text-center">
       {props.cigarettesHistory ? (
         <div className="text-black dark:text-white">
-          <span className="font-semibold">Cigarettes History</span>
+          <span className="font-semibold">History</span>
 
           {props.cigarettesHistory.map((el, index) => (
             <div key={index} className="mt-4">
-              <h3>{formatDate(el)}</h3>
+              <h3>
+                Cigarette
+                <span className="text-purple-500 font-bold">
+                  {" "}
+                  #{index + 1}
+                </span>{" "}
+                - {formatDate(el)}
+              </h3>
               {props.cigarettesHistory &&
                 props.cigarettesHistory?.length - 1 > index && (
                   <div className="h-0.5 my-3 bg-purple-500 mx-10"></div>
