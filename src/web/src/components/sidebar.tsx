@@ -5,7 +5,6 @@ import { sideBarMenu } from "../constants/sidebar";
 import { Link } from "react-router-dom";
 import apusLogo from "../assets/apusLogo.png";
 import { AuthContext, userConfigurationResponse } from "../context/authContext";
-import { Moon, Sun } from "lucide-react";
 
 export function SideBar() {
   const { callLogout } = useContext(AuthContext);
