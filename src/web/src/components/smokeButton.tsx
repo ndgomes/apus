@@ -17,7 +17,7 @@ export function SmokeButton(props: SmokeButtonProps) {
           Smoke
         </span>
       </button>
-      <div className="text-center text-black dark:text-white mt-8">
+      <div className="text-center text-white mt-8">
         <h2 className="font-semibold">You can smoke since:</h2>
         {props.isLoading ? (
           <Loading />
@@ -28,7 +28,7 @@ export function SmokeButton(props: SmokeButtonProps) {
                 <h1 className="text-purple-500 mt-2 font-bold text-lg">
                   The countdown ended!
                 </h1>
-                <h2 className="text-black dark:text-white mt-1 font-semibold">
+                <h2 className="text-white mt-1 font-semibold">
                   But you don't have to smoke just yet!{" "}
                   <span className="text-green-500"> :)</span>
                 </h2>
