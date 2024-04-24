@@ -20,7 +20,7 @@ export function HistoryTable(props: HistoryTableProps) {
   }
 
   return (
-    <div className="border-4 border-purple-500 rounded-lg h-[28rem] md:h-[38rem] lg:h-[42rem] p-4 md:w-2/3 my-4 mx-4 md:mr-4 lg:mr-8 overflow-auto text-center">
+    <div className="border-4 border-purple-500 rounded-lg h-[28rem] md:h-[38rem] lg:h-[42rem] p-4 md:w-2/3 my-4 mx-4 md:mr-4 lg:mr-8 overflow-auto text-center scrollbar">
       {props.cigarettesHistory?.length !== 0 ? (
         <div className="text-black dark:text-white">
           <span className="font-semibold">History</span>

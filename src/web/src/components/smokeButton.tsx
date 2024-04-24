@@ -19,10 +19,26 @@ export function SmokeButton(props: SmokeButtonProps) {
       </button>
       <div className="text-center text-black dark:text-white mt-8">
         <h2 className="font-semibold">You can smoke since:</h2>
-        {props.isLoading || props.timeToNextCigarette === "" ? (
+        {props.isLoading ? (
           <Loading />
         ) : (
-          <h1 className="text-purple-500 mt-2">{props.timeToNextCigarette}</h1>
+          <>
+            {props.timeToNextCigarette === "" ? (
+              <>
+                <h1 className="text-purple-500 mt-2 font-bold text-lg">
+                  The countdown ended!
+                </h1>
+                <h2 className="text-black dark:text-white mt-1 font-semibold">
+                  But you don't have to smoke just yet!{" "}
+                  <span className="text-green-500"> :)</span>
+                </h2>
+              </>
+            ) : (
+              <h1 className="text-purple-500 mt-2 font-bold text-lg">
+                {props.timeToNextCigarette}
+              </h1>
+            )}
+          </>
         )}
       </div>
     </div>
