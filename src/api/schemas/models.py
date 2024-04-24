@@ -21,6 +21,7 @@ class User(Base):
     # Define relationships
     profile = relationship("Quiz", back_populates="user")
     activity_logs = relationship("UserActivityLog", back_populates="user")
+    statistics = relationship("Statistics", back_populates="user")
 
 
 class Quiz(Base):
@@ -44,6 +45,17 @@ class UserActivityLog(Base):
     next_cigarette = Column(DateTime)
 
     user = relationship("User", back_populates="activity_logs")
+
+
+class Statistics(Base):
+    __tablename__ = 'statistics'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), unique=True)
+    total_saved_cigarettes = Column(Integer)
+    total_saved_money = Column(Float)
+    updated_at = Column(DateTime, onupdate=datetime.now)
+
+    user = relationship("User", back_populates="statistics")
 
 
 # revoked_token model
