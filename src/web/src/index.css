@@ -69,10 +69,9 @@
 */
 .area {
   background: #1e1b4b;
-  background: -webkit-linear-gradient(to left, #8b5cf6, #1e1b4b);
   width: 100vw;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   z-index: -1;
 }
 
