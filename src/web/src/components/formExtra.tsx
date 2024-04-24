@@ -9,7 +9,7 @@ export function FormExtra(props: FormExtraProps) {
   return (
     <>
       {props.error && (
-        <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+        <span className="text-white flex flex-row gap-2">
           <CircleX height={15} width={15} color="red" />
           Email or Password invalid
         </span>

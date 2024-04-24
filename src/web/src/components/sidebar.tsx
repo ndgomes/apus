@@ -17,16 +17,10 @@ export function SideBar() {
     : undefined;
 
   const [open, setOpen] = useState(false);
-  const [dark, setDark] = useState(false);
-
-  const darkModeHandler = () => {
-    setDark(!dark);
-    document.body.classList.toggle("dark");
-  };
 
   return (
     <div
-      className={`bg-gray-200 dark:bg-gray-900 h-[calc(100dvh)] relative flex flex-col overflow-hidden ${
+      className={`bg-gray-900 h-[calc(100dvh)] relative flex flex-col overflow-hidden ${
         open ? "w-72" : "w-16"
       } duration-500 text-gray-100 px-4`}
     >
@@ -36,7 +30,7 @@ export function SideBar() {
           style={{
             transitionDelay: `300ms`,
           }}
-          className={`flex items-center text-black dark:text-white whitespace-pre duration-500 ${
+          className={`flex items-center text-white whitespace-pre duration-500 ${
             !open && "opacity-0 translate-x-28 overflow-hidden "
           }`}
         >
@@ -78,19 +72,19 @@ export function SideBar() {
                 key={i}
                 className={`${
                   menu?.margin && "mt-5"
-                } group flex items-center text-sm gap-3.5 font-medium pt-2 pb-2 hover:bg-gray-300 rounded-md dark:hover:bg-gray-800`}
+                } group flex items-center text-sm gap-3.5 font-medium pt-2 pb-2 rounded-md hover:bg-gray-800`}
               >
                 <div>
                   {React.createElement(menu?.icon, {
                     size: "20",
-                    color: dark ? "#000" : "#FFF",
+                    color: "#FFF",
                   })}
                 </div>
                 <h2
                   style={{
                     transitionDelay: `${i + 3}00ms`,
                   }}
-                  className={`text-black dark:text-white whitespace-pre duration-500 ${
+                  className={`text-white whitespace-pre duration-500 ${
                     !open && "opacity-0 translate-x-28 overflow-hidden"
                   }`}
                 >
@@ -102,32 +96,20 @@ export function SideBar() {
         ))}
       </div>
       <div className="mt-auto">
-        <div className="w-full flex items-center pb-4">
-          <button
-            style={{
-              transitionDelay: `300ms`,
-            }}
-            className={`mr-auto whitespace-pre duration-500 ${
-              !open && "opacity-0 translate-x-28 overflow-hidden"
-            }`}
-            onClick={() => darkModeHandler()}
-          >
-            {!dark && <Sun size={18} color="white" fill="white" />}
-            {dark && <Moon size={20} color="black" fill="black" />}
-          </button>
+        <div className="w-full pb-4 items-end">
           <button onClick={() => setOpen(!open)}>
             {open ? (
-              <ChevronLeft color={dark ? "#000" : "#FFF"} size={24} />
+              <ChevronLeft color={"#FFF"} size={24} />
             ) : (
-              <ChevronRight color={dark ? "#000" : "#FFF"} size={24} />
+              <ChevronRight color={"#FFF"} size={24} />
             )}
           </button>
         </div>
-        <div className="border-t border-black dark:border-white flex py-4">
+        <div className="border-t border-white flex py-4">
           <div className={"w-full flex items-center"}>
             <CircleUser
               className={`${open && "mr-2"}`}
-              color={dark ? "#000" : "#FFF"}
+              color={"#FFF"}
               style={{
                 transitionDelay: `300ms`,
               }}
@@ -137,7 +119,7 @@ export function SideBar() {
               style={{
                 transitionDelay: `300ms`,
               }}
-              className={`text-black dark:text-white whitespace-pre duration-500 ${
+              className={`text-white whitespace-pre duration-500 ${
                 !open && "opacity-0 translate-x-28 overflow-hidden"
               }`}
             >

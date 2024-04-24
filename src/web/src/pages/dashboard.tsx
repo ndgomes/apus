@@ -120,7 +120,24 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="flex">
       <SideBar />
-      <div className="bg-gray-100 dark:bg-gray-800 w-screen h-[calc(100dvh)] overflow-y-auto">
+      <div className="w-screen h-[calc(100dvh)] overflow-y-auto">
+        {/* Background Animation */}
+        <div className="area">
+          <ul className="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+        {/* End Background Animation */}
+
         <div className="mt-3">
           <ProgressCards
             phaseLevel="5"

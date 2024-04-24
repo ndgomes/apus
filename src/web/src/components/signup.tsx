@@ -17,7 +17,7 @@ export function Signup(props: SignupProps) {
     <form className="mt-8 space-y-6" onSubmit={props.onSubmit}>
       <div className="">
         {props.isError && (
-          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+          <span className="text-white flex flex-row gap-2">
             <CircleX height={15} width={15} color="red" />
             {props.isError.user_exists && "Username already exists"}
             {props.isError.email_exists && "Email already exists"}
@@ -45,7 +45,7 @@ export function Signup(props: SignupProps) {
         ))}
 
         <div className="flex flex-col gap-1.5 mt-7">
-          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+          <span className="text-white flex flex-row gap-2">
             {props.passwordValidationsState.includes("lowerCaseOK") ? (
               <CircleCheck height={15} width={15} color="green" />
             ) : (
@@ -53,7 +53,7 @@ export function Signup(props: SignupProps) {
             )}
             At least one lowercase letter (a - z)
           </span>
-          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+          <span className="text-white flex flex-row gap-2">
             {props.passwordValidationsState.includes("upperCaseOK") ? (
               <CircleCheck height={15} width={15} color="green" />
             ) : (
@@ -61,7 +61,7 @@ export function Signup(props: SignupProps) {
             )}
             At least one uppercase letter (A - Z)
           </span>
-          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+          <span className="text-white flex flex-row gap-2">
             {props.passwordValidationsState.includes("numberCaseOK") ? (
               <CircleCheck height={15} width={15} color="green" />
             ) : (
@@ -69,7 +69,7 @@ export function Signup(props: SignupProps) {
             )}
             At least one numeric value (0-9)
           </span>
-          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+          <span className="text-white flex flex-row gap-2">
             {props.passwordValidationsState.includes("specialCharOK") ? (
               <CircleCheck height={15} width={15} color="green" />
             ) : (
@@ -77,7 +77,7 @@ export function Signup(props: SignupProps) {
             )}
             At least one special symbol (!@#$%^&*=+-_)
           </span>
-          <span className="dark:text-white text-gray-600 flex flex-row gap-2">
+          <span className="text-white flex flex-row gap-2">
             {props.passwordValidationsState.includes("lenghtOK") ? (
               <CircleCheck height={15} width={15} color="green" />
             ) : (

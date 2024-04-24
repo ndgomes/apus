@@ -22,7 +22,7 @@ export function HistoryTable(props: HistoryTableProps) {
   return (
     <div className="border-4 border-purple-500 rounded-lg h-[28rem] md:h-[38rem] lg:h-[42rem] p-4 md:w-2/3 my-4 mx-4 md:mr-4 lg:mr-8 overflow-auto text-center scrollbar">
       {props.cigarettesHistory?.length !== 0 ? (
-        <div className="text-black dark:text-white">
+        <div className="text-white">
           <span className="font-semibold">History</span>
 
           {props.cigarettesHistory?.map((el, index) => (
@@ -43,7 +43,7 @@ export function HistoryTable(props: HistoryTableProps) {
           ))}
         </div>
       ) : (
-        <div className="text-black dark:text-white">
+        <div className="text-white">
           <div className="font-semibold">Cigarettes History</div>
           <div className="font-semibold text-purple-500 mt-3">
             We have no history of your cigarettes today. <br /> We're happy for
