@@ -64,7 +64,7 @@ export const DashboardPage: React.FC = () => {
 
         if (timeBetween <= 0) {
           clearInterval(intervalId);
-          setCountdownFormatted("The countdown ended, but you don't have to smoke just yet!");
+          setCountdownFormatted("");
         } else {
           const days = Math.floor(timeBetween / (1000 * 60 * 60 * 24));
           const hours = Math.floor(
