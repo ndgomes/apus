@@ -132,6 +132,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       })
       .catch((error) => {
         console.log(error);
+        callLogout();
       });
   }
 
