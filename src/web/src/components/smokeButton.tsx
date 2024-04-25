@@ -8,7 +8,7 @@ interface SmokeButtonProps {
 
 export function SmokeButton(props: SmokeButtonProps) {
   return (
-    <div className="border-2 border-purple-500 bg-purple-600 bg-opacity-15 rounded-lg h-[28rem] md:h-[38rem] lg:h-[42rem] p-4 md:w-2/5 my-4 mx-4 md:ml-4 lg:ml-8 flex flex-col items-center justify-center">
+    <div className="border-2 border-purple-500 bg-purple-600 bg-opacity-25 rounded-lg h-[28rem] md:h-[38rem] lg:h-[42rem] p-4 md:w-2/5 my-4 mx-4 md:ml-4 lg:ml-8 flex flex-col items-center justify-center">
       <button
         onClick={props.onClickSmoke}
         className="bg-purple-500 hover:bg-gradient-to-r from-purple-500 to-purple-900 flex justify-center items-center text-center rounded-3xl w-32 h-32 md:w-52 md:h-52 lg:w-96 lg:h-96"

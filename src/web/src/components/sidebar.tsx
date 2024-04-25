@@ -45,7 +45,7 @@ export function SideBar() {
                 title="Coming Soon"
                 className={`${
                   menu?.margin && "mt-5"
-                } group flex items-center text-sm gap-3.5 font-medium pt-2 pb-2`}
+                } group flex items-center text-sm gap-3.5 font-medium py-2`}
                 disabled
               >
                 <div>
@@ -95,7 +95,7 @@ export function SideBar() {
         ))}
       </div>
       <div className="mt-auto">
-        <div className="w-full pb-4 items-end">
+        <div className="w-full pb-4 flex justify-end">
           <button onClick={() => setOpen(!open)}>
             {open ? (
               <ChevronLeft color={"#FFF"} size={24} />
@@ -107,12 +107,14 @@ export function SideBar() {
         <div className="border-t border-white flex py-4">
           <div className={"w-full flex items-center"}>
             <CircleUser
-              className={`${open && "mr-2"}`}
+              className={`text-white whitespace-pre duration-500 ${
+                open ? "mr-2" : "opacity-0 translate-x-28 overflow-hidden"
+              }`}
               color={"#FFF"}
               style={{
                 transitionDelay: `300ms`,
               }}
-              size={open ? 22 : 0}
+              size={22}
             />
             <h4
               style={{
