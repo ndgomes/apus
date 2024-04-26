@@ -21,14 +21,16 @@ async def register_quiz(
         raise HTTPException(status_code=401, detail="User not authenticated")
 
     # Create and save user quiz
-    quiz = Quiz(
-        user_id=current_user.id,
-        cigarettes_per_day=profile_data.cigarettes_per_day,
-        price_per_package=profile_data.price_per_package,
-        cigarettes_per_package=profile_data.cigarettes_per_package
-    )
-    if not quiz:
+    try:
+        quiz = Quiz(
+            user_id=current_user.id,
+            cigarettes_per_day=profile_data.cigarettes_per_day,
+            price_per_package=profile_data.price_per_package,
+            cigarettes_per_package=profile_data.cigarettes_per_package
+        )
         db.add(quiz)
+    except Exception:
+        return {"message": "user quiz already created"}
 
     # First time user is now False
     current_user.is_first_time = False
