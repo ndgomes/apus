@@ -6,11 +6,7 @@ from datetime import date, timedelta
 from dependencies import get_db, get_current_user
 from schemas.models import User, Quiz, UserActivityLog, ReductionPhase
 from schemas.response import ConfigurationResponse, UserResponse, QuizResponse, SmokeLogResponse, ReductionPhaseResponse
-<<<<<<< HEAD
 from handlers.handlers import calculate_saved_cigarettes_and_money, calculate_percentage_reduction_phase
-=======
-from handlers.handlers import calculate_saved_cigarettes_and_money
->>>>>>> 6e69e8a8796d0fd940d626d4f6642abe148eaf01
 
 router = APIRouter()
 
@@ -61,10 +57,6 @@ async def configuration(token: str = Header(...), current_user: User = Depends(g
         current_user.id, db)
 
     current_reduction_phase_response = ReductionPhaseResponse(phase_number=getattr(
-<<<<<<< HEAD
         current_reduction_phase, "phase_number", None), time_between_cigarettes=getattr(current_reduction_phase, "time_between_cigarettes", None), start_date=getattr(current_reduction_phase, "start_date", None), end_date=getattr(current_reduction_phase, "end_date", None), percentage_reduction_phase=calculate_percentage_reduction_phase(current_reduction_phase))
-=======
-        current_reduction_phase, "phase_number", None), time_between_cigarettes=getattr(current_reduction_phase, "time_between_cigarettes", None), start_date=getattr(current_reduction_phase, "start_date", None), end_date=getattr(current_reduction_phase, "end_date", None))
->>>>>>> 6e69e8a8796d0fd940d626d4f6642abe148eaf01
 
     return ConfigurationResponse(config={"user": user_response.model_dump(), "quiz": quiz_response.model_dump(), "smoke_log": smoke_log_response.model_dump(), "history": history, "saved_cigarettes_and_money": saved_cigarettes_and_money, "current_reduction_phase": current_reduction_phase_response})
