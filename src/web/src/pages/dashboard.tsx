@@ -32,10 +32,10 @@ export const DashboardPage: React.FC = () => {
 
   const [historyData, setHistoryData] = useState<Date[] | undefined>([]);
 
-  const addHours = (date: Date, hours: number) => {
+  const addMinutes = (date: Date, minutes: number) => {
     let dateCopy = new Date(date.getTime());
-    const hoursToAdd = hours * 60 * 60 * 1000;
-    dateCopy.setTime(date.getTime() + hoursToAdd);
+    const minutesToAdd = minutes * 60 * 1000;
+    dateCopy.setTime(date.getTime() + minutesToAdd);
     return dateCopy;
   };
 
@@ -91,7 +91,12 @@ export const DashboardPage: React.FC = () => {
 
     const currentDate = new Date();
     setLastCigaretteState(currentDate);
-    setNextCigaretteState(addHours(currentDate, 1));
+    setNextCigaretteState(
+      addMinutes(
+        currentDate,
+        userConfig.current_reduction_phase.time_between_cigarettes
+      )
+    );
 
     axios
       .post(
@@ -139,12 +144,7 @@ export const DashboardPage: React.FC = () => {
         {/* End Background Animation */}
 
         <div className="mt-3">
-          <ProgressCards
-            phaseLevel="5"
-            phaseCompleted="80%"
-            savedCigarettes="25"
-            savedMoney="1 500,56 €"
-          />
+          <ProgressCards configuration={userConfig} />
         </div>
 
         <div className="flex flex-col md:flex-row">
