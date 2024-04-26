@@ -29,7 +29,7 @@ export function SmokeButton(props: SmokeButtonProps) {
                   The countdown ended!
                 </h1>
                 <h2 className="text-white mt-1 font-semibold">
-                  But you don't have to smoke just yet!{" "}
+                  But you don't have to smoke now!{" "}
                   <span className="text-green-500"> :)</span>
                 </h2>
               </>

@@ -4,7 +4,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export interface userConfigurationResponse {
-  history: Date[];
+  user: {
+    username: string;
+    email: string;
+    password: string;
+    is_first_time: boolean;
+  };
   quiz: {
     cigarettes_per_day: number | null;
     price_per_package: number | null;
@@ -14,11 +19,15 @@ export interface userConfigurationResponse {
     last_cigarette: Date | null;
     next_cigarette: Date | null;
   };
-  user: {
-    username: string;
-    email: string;
-    password: string;
-    is_first_time: boolean;
+  history: Date[];
+  saved_cigarettes_and_money: {
+    total_saved_cigarettes: number;
+    total_saved_money: number;
+  };
+  current_reduction_phase: {
+    phase_number: number;
+    percentage_reduction_phase: number;
+    time_between_cigarettes: number;
   };
 }
 
