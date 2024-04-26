@@ -124,7 +124,6 @@ def populate_reduction_phases(user_id: int, cigarettes_per_day: int, db: Session
     db.commit()
 
     return {"message": "Reduction phases populated"}
-<<<<<<< HEAD
 
 
 def calculate_percentage_reduction_phase(phase: object):
@@ -137,5 +136,3 @@ def calculate_percentage_reduction_phase(phase: object):
     percentage = (number_of_days_elapsed / total_number_of_days) * 100
 
     return percentage
-=======
->>>>>>> 6e69e8a8796d0fd940d626d4f6642abe148eaf01

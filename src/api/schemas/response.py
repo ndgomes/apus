@@ -30,10 +30,7 @@ class ReductionPhaseResponse(BaseModel):
     time_between_cigarettes: Optional[int]
     start_date: Optional[datetime]
     end_date: Optional[datetime]
-<<<<<<< HEAD
     percentage_reduction_phase: Optional[float]
-=======
->>>>>>> 6e69e8a8796d0fd940d626d4f6642abe148eaf01
 
 
 class ConfigurationResponse(BaseModel):
