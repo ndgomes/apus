@@ -1,10 +1,8 @@
 # auth.py
 import jwt
 import bcrypt
-import uuid
 
-from datetime import datetime, timedelta
-from pydantic import BaseModel
+from datetime import timedelta
 from fastapi import APIRouter, HTTPException, Depends, Header, status
 from sqlalchemy.orm import Session
 
@@ -12,34 +10,10 @@ from sqlalchemy.orm import Session
 from settings import SECRET_KEY, ALGORITHM
 from dependencies import get_db
 from schemas.models import User, RevokedToken
+from schemas.requests import UserLogin, UserSignup
+from handlers.handlers import create_access_token, decode_access_token
 
 router = APIRouter()
-
-
-# Function to create a JWT token
-def create_access_token(data: dict, expires_delta: timedelta):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + expires_delta
-    to_encode.update({"exp": expire, "jti": str(uuid.uuid4())})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-
-# Function to decode JWT token
-def decode_access_token(token: str):
-    try:
-        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return decoded_token
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token has expired")
-    except jwt.DecodeError:
-        raise HTTPException(status_code=401, detail="Could not decode token")
-
-
-# Pydantic model for login request body
-class UserLogin(BaseModel):
-    email: str
-    password: str
 
 
 # Login route
@@ -57,13 +31,6 @@ async def login(user_login: UserLogin, db: Session = Depends(get_db)):
     )
 
     return {"access_token": access_token, "user": user.username}
-
-
-# Pydantic model for signup request body
-class UserSignup(BaseModel):
-    username: str
-    email: str
-    password: str
 
 
 # Route for user signup
