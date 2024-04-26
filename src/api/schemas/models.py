@@ -1,5 +1,5 @@
 # models.py
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
@@ -22,6 +22,7 @@ class User(Base):
     profile = relationship("Quiz", back_populates="user")
     activity_logs = relationship("UserActivityLog", back_populates="user")
     statistics = relationship("Statistics", back_populates="user")
+    reduction_phases = relationship("ReductionPhase", back_populates="user")
 
 
 class Quiz(Base):
@@ -45,6 +46,19 @@ class UserActivityLog(Base):
     next_cigarette = Column(DateTime)
 
     user = relationship("User", back_populates="activity_logs")
+
+
+class ReductionPhase(Base):
+    __tablename__ = 'reduction_phases'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    phase_number = Column(Integer)
+    cigarettes_per_day = Column(Integer)
+    time_between_cigarettes = Column(Integer)
+    start_date = Column(Date)
+    end_date = Column(Date)
+
+    user = relationship("User", back_populates="reduction_phases")
 
 
 class Statistics(Base):

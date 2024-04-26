@@ -1,19 +1,13 @@
 # quiz.py
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
 
 from schemas.models import Quiz, User
+from schemas.requests import QuizBaseModel
 from dependencies import get_db, get_current_user
+from handlers.handlers import populate_reduction_phases
 
 router = APIRouter()
-
-
-# Pydantic model for user quiz registration request body
-class QuizBaseModel(BaseModel):
-    cigarettes_per_day: int
-    price_per_package: float
-    cigarettes_per_package: int
 
 
 # Endpoint for registering user quiz
@@ -33,12 +27,19 @@ async def register_quiz(
         price_per_package=profile_data.price_per_package,
         cigarettes_per_package=profile_data.cigarettes_per_package
     )
-    db.add(quiz)
-    db.commit()
+    if not quiz:
+        db.add(quiz)
 
     # First time user is now False
     current_user.is_first_time = False
     db.commit()
+
+    try:
+        populate_reduction_phases(
+            current_user.id, profile_data.cigarettes_per_day, db)
+    except Exception:
+        raise HTTPException(
+            status_code=506, detail="error populating reduction phases")
 
     return {"message": "user quiz created successfully"}
 
@@ -65,5 +66,12 @@ async def update_quiz(
 
     # Save the updated profile
     db.commit()
+
+    try:
+        populate_reduction_phases(
+            current_user.id, profile_data.cigarettes_per_day, db)
+    except Exception:
+        raise HTTPException(
+            status_code=506, detail="error populating reduction phases")
 
     return {"message": "User quiz updated successfully"}
