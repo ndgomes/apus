@@ -1,22 +1,15 @@
 # smoking.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
-from datetime import datetime, timedelta
+from datetime import date, timedelta
+from sqlalchemy import func, Date
 
 from dependencies import get_db, get_current_user
-from schemas.models import User, UserActivityLog
+from schemas.models import User, UserActivityLog, ReductionPhase
+from schemas.requests import SmokeBaseModel
+from schemas.response import SmokeResponse
 
 router = APIRouter()
-
-
-# Pydantic model for user quiz registration request body
-class SmokeBaseModel(BaseModel):
-    last_cigarette: datetime
-
-
-class SmokeResponse(BaseModel):
-    next_cigarette: datetime
 
 
 # Endpoint for registering smoke
@@ -29,7 +22,15 @@ async def register_smoke(
     if not current_user:
         raise HTTPException(status_code=401, detail="User not authenticated")
 
-    next_cigarette = smoke_data.last_cigarette + timedelta(hours=1)
+    today = date.today()
+
+    current_reduction_phase = db.query(ReductionPhase).filter(
+        ReductionPhase.user_id == current_user.id, func.date(ReductionPhase.start_date, type_=Date) >= today).first()
+
+    current_time_between_cigarettes = current_reduction_phase.time_between_cigarettes
+
+    next_cigarette = smoke_data.last_cigarette + \
+        timedelta(minutes=current_time_between_cigarettes)
 
     # Create and save smoke log
     smoke_log = UserActivityLog(

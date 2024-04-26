@@ -23,13 +23,13 @@ app.include_router(api_router)
 
 
 # Database setup
-app.add_event_handler("startup", get_db)
-
-# Create the database tables if they don't exist
-app.add_event_handler("startup", create_tables)
+@app.on_event("startup")
+async def startup_event():
+    get_db()
+    create_tables()
 
 
 # Root route
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "not found"}
