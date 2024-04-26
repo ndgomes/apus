@@ -29,12 +29,11 @@ async def register_quiz(
             cigarettes_per_package=profile_data.cigarettes_per_package
         )
         db.add(quiz)
+        # First time user is now False
+        current_user.is_first_time = False
+        db.commit()
     except Exception:
         return {"message": "user quiz already created"}
-
-    # First time user is now False
-    current_user.is_first_time = False
-    db.commit()
 
     try:
         populate_reduction_phases(
