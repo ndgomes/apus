@@ -127,15 +127,18 @@ def populate_reduction_phases(user_id: int, cigarettes_per_day: int, db: Session
 
 
 def calculate_percentage_reduction_phase(phase: object):
-    if not phase:
+
+    if not phase or not hasattr(phase, 'start_date') or not hasattr(phase, 'end_date'):
         return None
 
     today = date.today()
-    total_number_of_days = phase.end_date - \
-        phase.start_date + timedelta(days=1)
 
-    number_of_days_elapsed = today - phase.start_date + timedelta(days=1)
+    total_number_of_days = (
+        phase.end_date - phase.start_date + timedelta(days=1)).days
+
+    number_of_days_elapsed = 0 if today == phase.start_date else (
+        today - phase.start_date + timedelta(days=1)).days
 
     percentage = (number_of_days_elapsed / total_number_of_days) * 100
 
-    return percentage
+    return min(max(percentage, 0), 100)
